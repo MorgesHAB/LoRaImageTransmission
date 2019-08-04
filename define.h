@@ -6,8 +6,7 @@
 // Author : Lionel Isoz
 // Version 3 - 2 août 2019
 //////////////////////////////////////////////////////////
-#define PACKET_INDEX_SIZE   248
-#define PACKET_MAX_SIZE     250 // bytes  // real max = 255
+#define PACKET_INDEX_SIZE   250 // real max = 251
 #define IMAGE_NAME          1   // argv
 
 // Packet Index - encapsulation order - use : packet[NAME]
