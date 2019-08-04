@@ -3,7 +3,7 @@
 
 EXE_NAME=LoRaImageTransmission
 CXX=g++
-CPPFILES = main.cpp  # Take all the .cpp file
+CPPFILES = TxImg.cpp  # Take all the .cpp file
 OFILES = $(CPPFILES:.cpp=.o)  # Take all the .o file associated to the .cc
 
 INCLUDES_PATH=-I lib/radiohead/
