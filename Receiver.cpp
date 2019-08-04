@@ -9,6 +9,7 @@
 //   ---Reception modem---
 //////////////////////////////////////////////////////////
 #include <iostream>
+#include <fstream>
 #include <RH_RF95.h>
 #include "define.h"
 
@@ -39,7 +40,7 @@ void setupLoRaPHY() {
     }
 }
 
-void print(uint8_t& packet) {
+void print(uint8_t* packet) {
   std::cout << "--------------------- PACKET PRINT --------------------------" << std::endl;
   std::cout << " | Packet n° " << +packet[NUMBER] << " / " << +packet[PACKET_TOTAL_NBR]
             << " | Length : " << +packet[LENGTH]
@@ -55,15 +56,37 @@ void print(uint8_t& packet) {
     std::cout << std::endl;
 }
 
+void buildImage(uint8_t* packet) {
+  std::ofstream file("ImageRx.ppm", std::ios::out | std::ios::trunc);
+  if (file) {
+    if (packet[NUMBER] == 1) {
+      file << "P3" << std::endl;
+      file << +packet[COLUMNS_NBR] << " " << +packet[LINES_NBR] << std::endl;
+      file << 255 << std::endl; // Max value
+    }
+
+    for (int i(FIRST_IMG_INDEX); i <= +packet[LENGTH]; ++i) {
+      if ((i-FIRST_IMG_INDEX) % 30 == 0) file << std::endl;
+      file << +packet[i] << " ";
+    }
+
+    file.close();
+  } else {
+      std::cout << "Impossible to open the file !" << std::endl;
+  }
+}
+
 
 int main() {
-  while(true) {
+  setupLoRaPHY();
+  while(true) {   // stop reception with Ctrl+C
     if (rf95.available()) {
       uint8_t packet[PACKET_INDEX_SIZE];
       uint8_t len = sizeof(packet);
 
       if (rf95.recv(packet, &len)) {
         print(packet);
+        buildImage(packet);
       }
     }
     usleep(RECEPTION_SLEEP_TIME);
