@@ -11,15 +11,18 @@
 #define IMAGE_NAME          1   // argv
 
 // Packet Index - encapsulation order - use : packet[NAME]
-#define NUMBER              0   //
-#define SENT_NBR            1   //   change for each packet
-#define RECEIVED            2   //
-#define LENGTH              3   //
-#define PACKET_TOTAL_NBR    4   ///
-#define COLUMNS_NBR         5   ///  constant for an image
-#define LINES_NBR           6   ///
-#define FIRST_IMG_INDEX     7   //// IMAGE part
-#define LAST_IMG_INDEX      246 ////  => 80 pixel 3x80 = 240
+#define NUMBER_L            0   //  L : Left 
+#define NUMBER_R            1   //  R : Right
+#define SENT_NBR            2   //   change for each packet
+#define RECEIVED            3   //
+#define LENGTH              4   //
+#define COLUMNS_NBR_L       5   ///
+#define COLUMNS_NBR_R       6   ///  constant for an image
+#define LINES_NBR_L         7   ///
+#define LINES_NBR_R         8   ///
+#define FIRST_IMG_INDEX     9   //// IMAGE part
+#define LAST_IMG_INDEX      248 ////  => 80 pixel 3x80 = 240
+#define BYTE_PER_PACKET     LAST_IMG_INDEX - FIRST_IMG_INDEX + 1
 
 //////////////////////////////////////////////////////////
 // LoRa PHY configuration

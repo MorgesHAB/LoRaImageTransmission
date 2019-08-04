@@ -21,9 +21,10 @@ private:
 
 public:
   Packet(std::ifstream& file) {
-    static uint8_t packetNumber(0);
-    packet[NUMBER] = ++packetNumber;
-    packet[SENT_NBR] = 0;
+    static uint16_t packetNumber(0);
+    packet[NUMBER_L] = (++packetNumber) >> 8;
+    packet[NUMBER_R] = packetNumber;
+    packet[SENT_NBR] = 1;
     packet[RECEIVED] = 0;
 
     int data;
@@ -45,12 +46,13 @@ public:
 
   void print() const {
     std::cout << "--------------------- PACKET PRINT --------------------------" << std::endl;
-    std::cout << " | Packet n° " << +packet[NUMBER] << " / " << +packet[PACKET_TOTAL_NBR]
+    std::cout << " | Packet n° " << +(packet[NUMBER_L] << 8 | packet[NUMBER_R])
+              << " / " << 3 * +packet[LINES_NBR] * +packet[COLUMNS_NBR] / BYTE_PER_PACKET + 1
               << " | Length : " << +packet[LENGTH]
               << " | Sent " << +packet[SENT_NBR] << " time(s)"
               << " | Received : " << ((+packet[RECEIVED])?"YES!":"NO!")
-              << " | Image -  " << +packet[LINES_NBR] << " Lines & "
-                               << +packet[COLUMNS_NBR] << " Columns";
+              << " | Image -  " << +(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]) << " Lines & "
+                               << +(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R]) << " Columns";
       std::cout << " | Image Data : " << std::endl;
       for (int i(FIRST_IMG_INDEX); i <= LAST_IMG_INDEX; ++i) {
         std::cout << +packet[i] << " ";
@@ -64,9 +66,9 @@ public:
 
 class Image {
 private:
-  int nbL;  // Lines nbr Image
-  int nbC;  // Colums nbr Image
-  int maxIntensity;
+  uint16_t nbL;  // Lines nbr Image
+  uint16_t nbC;  // Colums nbr Image
+  unsigned int maxIntensity;
   std::vector<Packet*> packetCollection;
   RH_RF95 rf95;
 public:
@@ -77,8 +79,8 @@ public:
         std::string format;
         file >> format;
         if (format != "P3") std::cout << "Error, image isn't in PPM format" << std::endl;
-        file >> nbL;
         file >> nbC;
+        file >> nbL;
         file >> maxIntensity;
         if (maxIntensity != 255) std::cout << "Error, max isn't 255" << std::endl;
 
@@ -87,9 +89,10 @@ public:
         }
 
         for (auto& packet : packetCollection) {
-          packet->fill(PACKET_TOTAL_NBR, packetCollection.size());
-          packet->fill(COLUMNS_NBR, nbC);
-          packet->fill(LINES_NBR, nbL);
+          packet->fill(COLUMNS_NBR_L, nbC >> 8);
+          packet->fill(COLUMNS_NBR_R, nbC);
+          packet->fill(LINES_NBR_L, nbL >> 8);
+          packet->fill(LINES_NBR_R, nbL);
         }
 
         file.close();

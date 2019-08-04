@@ -42,12 +42,13 @@ void setupLoRaPHY() {
 
 void print(uint8_t* packet) {
   std::cout << "--------------------- PACKET PRINT --------------------------" << std::endl;
-  std::cout << " | Packet n° " << +packet[NUMBER] << " / " << +packet[PACKET_TOTAL_NBR]
+  std::cout << " | Packet n° " << +(packet[NUMBER_L] << 8 | packet[NUMBER_R])
+            << " / " << 3 * +packet[LINES_NBR] * +packet[COLUMNS_NBR] / BYTE_PER_PACKET + 1
             << " | Length : " << +packet[LENGTH]
             << " | Sent " << +packet[SENT_NBR] << " time(s)"
             << " | Received : " << ((+packet[RECEIVED])?"YES!":"NO!")
-            << " | Image -  " << +packet[LINES_NBR] << " Lines & "
-                             << +packet[COLUMNS_NBR] << " Columns";
+            << " | Image -  " << +(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]) << " Lines & "
+                             << +(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R]) << " Columns";
     std::cout << " | Image Data : " << std::endl;
     for (int i(FIRST_IMG_INDEX); i <= LAST_IMG_INDEX; ++i) {
       std::cout << +packet[i] << " ";
@@ -57,7 +58,7 @@ void print(uint8_t* packet) {
 }
 
 void buildImage(uint8_t* packet) {
-  std::ofstream file("ImageRx.ppm", std::ios::out | std::ios::trunc);
+  std::ofstream file("ImageRx.ppm", std::ios::app);
   if (file) {
     if (packet[NUMBER] == 1) {
       file << "P3" << std::endl;
@@ -79,14 +80,15 @@ void buildImage(uint8_t* packet) {
 
 int main() {
   setupLoRaPHY();
-  while(true) {   // stop reception with Ctrl+C
+  while(true) {
     if (rf95.available()) {
       uint8_t packet[PACKET_INDEX_SIZE];
       uint8_t len = sizeof(packet);
 
       if (rf95.recv(packet, &len)) {
         print(packet);
-        buildImage(packet);
+        buildImage(packet
+        if (+packet[NUMBER] == 3 * +packet[LINES_NBR] * +packet[COLUMNS_NBR] / BYTE_PER_PACKET + 1) return EXIT_SUCCESS;
       }
     }
     usleep(RECEPTION_SLEEP_TIME);
