@@ -17,7 +17,9 @@ int main() {
     rf95.setFrequency(868.0); /* Mhz */
 
     uint8_t data[10];
-    data[0] = 218;
+    for (size_t i = 0; i < 10; i++) {
+      data[i] = i;
+    }
     rf95.send(data, sizeof(data));
     rf95.waitPacketSent();
 

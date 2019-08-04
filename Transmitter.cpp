@@ -5,30 +5,15 @@
 //
 // Author : Lionel Isoz
 // Version 3 - 2 août 2019
+//
+//   ---Transmitter modem---
 //////////////////////////////////////////////////////////
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <RH_RF95.h>
-
-#define PACKET_INDEX_SIZE   250
-#define PACKET_MAX_SIZE     250 // bytes  // real max = 255
-#define IMAGE_NAME          1   // argv
-
-// Packet Index - encapsulation order - use : packet[NAME]
-#define NUMBER              0   //
-#define SENT_NBR            1   //   change for each packet
-#define RECEIVED            2   //
-#define LENGTH              3   //
-#define PACKET_TOTAL_NBR    4   ///
-#define COLUMNS_NBR         5   ///  constant for an image
-#define LINES_NBR           6   ///
-#define FIRST_IMG_INDEX     7   //// IMAGE part
-#define LAST_IMG_INDEX      246 ////  => 80 pixel 3x80 = 240
-
-#define LORA_MODE           0   // Choose between 0, 1, 2 or 3
-enum {MEDIUM_RANGE = 0, FAST_SHORT_RANGE, SLOW_LONG_RANGE, MAX_RANGE};
+#include "define.h"
 
 class Packet {
 private:
@@ -120,30 +105,27 @@ public:
       std::cout << "Init failed" << std::endl;
        exit(0);
     }
-
-    rf95.setFrequency(868.0); /* MHz */
-    /* Tx power is from +5 to +23 dBm */
-    rf95.setTxPower(23);
-    // config in lib/radiohead/RH_RF95.h at line 437
+    rf95.setFrequency(FREQUENCY); /* MHz */
+    rf95.setTxPower(TX_POWER);
     switch(LORA_MODE) {
       case MEDIUM_RANGE :
         rf95.setModemConfig(RH_RF95::Bw125Cr45Sf128);
         break;
       case FAST_SHORT_RANGE :
-        rf95.setModemConfig(RH_RF95::Bw125Cr45Sf128);
+        rf95.setModemConfig(RH_RF95::Bw500Cr45Sf128);
         break;
       case SLOW_LONG_RANGE :
-        rf95.setModemConfig(RH_RF95::Bw125Cr45Sf128);
+        rf95.setModemConfig(RH_RF95::Bw31_25Cr48Sf512);
         break;
       case MAX_RANGE :
-        rf95.setModemConfig(RH_RF95::Bw125Cr45Sf128);
+        rf95.setModemConfig(RH_RF95::Bw125Cr48Sf4096);
         break;
       }
   }
 
   void send() {
     for(auto& packet : packetCollection) {
-      rf95.send(packet->get(), sizeof(packet->get()));
+      rf95.send(packet->get(), PACKET_INDEX_SIZE);
       rf95.waitPacketSent();
     }
   }
@@ -152,13 +134,11 @@ public:
     for (auto& packet : packetCollection) packet->print();
   }
 
-
   ~Image() {
     for (auto& packet : packetCollection) delete packet;
     packetCollection.clear();
   }
 };
-
 
 
 

@@ -1,9 +1,9 @@
+# LoRa Image Transmission
+# Lionel Isoz
 
-
-
-EXE_NAME=LoRaImageTransmission
+EXE_NAME=TRANSMIT
 CXX=g++
-CPPFILES = TxImg.cpp  # Take all the .cpp file
+CPPFILES = Transmitter.cpp  # Take all the .cpp file
 OFILES = $(CPPFILES:.cpp=.o)  # Take all the .o file associated to the .cc
 
 INCLUDES_PATH=-I lib/radiohead/

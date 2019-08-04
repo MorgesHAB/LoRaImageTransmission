@@ -1,4 +1,5 @@
 #include <iostream>
+#include "define.h"
 
 using namespace std;
 
