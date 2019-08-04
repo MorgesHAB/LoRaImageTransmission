@@ -16,7 +16,8 @@ int main() {
 
     rf95.setFrequency(868.0); /* Mhz */
 
-    uint8_t data[] = "MorgesHAB";
+    uint8_t data[10];
+    data[0] = 212;
     rf95.send(data, sizeof(data));
     rf95.waitPacketSent();
 
