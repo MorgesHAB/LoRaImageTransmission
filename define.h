@@ -11,7 +11,7 @@
 #define IMAGE_NAME          1   // argv
 
 // Packet Index - encapsulation order - use : packet[NAME]
-#define NUMBER_L            0   //  L : Left 
+#define NUMBER_L            0   //  L : Left  ( 2 uint8_t = uint16_t )
 #define NUMBER_R            1   //  R : Right
 #define SENT_NBR            2   //   change for each packet
 #define RECEIVED            3   //

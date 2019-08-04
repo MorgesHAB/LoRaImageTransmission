@@ -43,7 +43,8 @@ void setupLoRaPHY() {
 void print(uint8_t* packet) {
   uint16_t linesNbr(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]);
   uint16_t colNbr(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R]);
-  uint16_t totalPacket(3 * linesNbr * colNbr / BYTE_PER_PACKET + 1);
+  int bytePerPacket(BYTE_PER_PACKET);
+  int totalPacket(3 * +linesNbr * +colNbr / bytePerPacket + 1);
   uint16_t packetNbr(packet[NUMBER_L] << 8 | packet[NUMBER_R]);
   std::cout << "--------------------- PACKET PRINT --------------------------" << std::endl;
   std::cout << " | Packet n° " << packetNbr << " / " << totalPacket
@@ -51,20 +52,21 @@ void print(uint8_t* packet) {
             << " | Sent " << +packet[SENT_NBR] << " time(s)"
             << " | Received : " << ((+packet[RECEIVED])?"YES!":"NO!")
             << " | Image -  " << +linesNbr << " Lines & " << +colNbr << " Columns";
-    std::cout << " | Image Data : " << std::endl;
-    for (int i(FIRST_IMG_INDEX); i <= LAST_IMG_INDEX; ++i) {
-      std::cout << +packet[i] << " ";
-      if (i % 50 == 0) std::cout << std::endl;
-    }
-    std::cout << std::endl;
+  std::cout << " | Image Data : " << std::endl;
+  for (int i(FIRST_IMG_INDEX); i <= LAST_IMG_INDEX; ++i) {
+    std::cout << +packet[i] << " ";
+    if (i % 50 == 0) std::cout << std::endl;
+  }
+  std::cout << std::endl;
 }
 
 void buildImage(uint8_t* packet) {
   std::ofstream file("ImageRx.ppm", std::ios::app);
   if (file) {
-    if (packet[NUMBER] == 1) {
+    if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) {
       file << "P3" << std::endl;
-      file << +packet[COLUMNS_NBR] << " " << +packet[LINES_NBR] << std::endl;
+      file << +(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R])
+           << " " << +(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]) << std::endl;
       file << 255 << std::endl; // Max value
     }
 
@@ -89,7 +91,7 @@ int main() {
 
       if (rf95.recv(packet, &len)) {
         print(packet);
-        buildImage(packet
+        buildImage(packet);
         //if (+packet[NUMBER] == 3 * +packet[LINES_NBR] * +packet[COLUMNS_NBR] / BYTE_PER_PACKET + 1) return EXIT_SUCCESS;
       }
     }

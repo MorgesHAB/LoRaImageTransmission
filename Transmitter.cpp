@@ -47,7 +47,8 @@ public:
   void print() const {
     uint16_t linesNbr(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]);
     uint16_t colNbr(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R]);
-    uint16_t totalPacket(3 * linesNbr * colNbr / BYTE_PER_PACKET + 1);
+    int bytePerPacket(BYTE_PER_PACKET);
+    int totalPacket(3 * +linesNbr * +colNbr / bytePerPacket + 1);
     uint16_t packetNbr(packet[NUMBER_L] << 8 | packet[NUMBER_R]);
     std::cout << "--------------------- PACKET PRINT --------------------------" << std::endl;
     std::cout << " | Packet n° " << packetNbr << " / " << totalPacket
