@@ -1,5 +1,4 @@
-TARGET=LoRaTx
-NOM=TestBase
+TARGET=chisterapi
 
 CC=gcc
 CXX=g++
@@ -18,7 +17,7 @@ RH95_OBJS=$(subst .cpp,.o,$(RH95_SRCS))
 
 all: $(TARGET)
 
-$(TARGET): $(NOM).o $(RH95_OBJS)
+$(TARGET): src/main.o $(RH95_OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $^
 
 %.o: %.cpp
@@ -27,4 +26,4 @@ $(TARGET): $(NOM).o $(RH95_OBJS)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean:
-	$(RM) -f $(TARGET) $(RH95_OBJS) main.o
+	$(RM) -f $(TARGET) $(RH95_OBJS) src/main.o
