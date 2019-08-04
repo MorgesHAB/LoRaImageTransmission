@@ -41,14 +41,16 @@ void setupLoRaPHY() {
 }
 
 void print(uint8_t* packet) {
+  uint16_t linesNbr(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]);
+  uint16_t colNbr(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R]);
+  uint16_t totalPacket(3 * linesNbr * colNbr / BYTE_PER_PACKET + 1);
+  uint16_t packetNbr(packet[NUMBER_L] << 8 | packet[NUMBER_R]);
   std::cout << "--------------------- PACKET PRINT --------------------------" << std::endl;
-  std::cout << " | Packet n° " << +(packet[NUMBER_L] << 8 | packet[NUMBER_R])
-            << " / " << 3 * +packet[LINES_NBR] * +packet[COLUMNS_NBR] / BYTE_PER_PACKET + 1
+  std::cout << " | Packet n° " << packetNbr << " / " << totalPacket
             << " | Length : " << +packet[LENGTH]
             << " | Sent " << +packet[SENT_NBR] << " time(s)"
             << " | Received : " << ((+packet[RECEIVED])?"YES!":"NO!")
-            << " | Image -  " << +(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]) << " Lines & "
-                             << +(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R]) << " Columns";
+            << " | Image -  " << +linesNbr << " Lines & " << +colNbr << " Columns";
     std::cout << " | Image Data : " << std::endl;
     for (int i(FIRST_IMG_INDEX); i <= LAST_IMG_INDEX; ++i) {
       std::cout << +packet[i] << " ";
@@ -88,7 +90,7 @@ int main() {
       if (rf95.recv(packet, &len)) {
         print(packet);
         buildImage(packet
-        if (+packet[NUMBER] == 3 * +packet[LINES_NBR] * +packet[COLUMNS_NBR] / BYTE_PER_PACKET + 1) return EXIT_SUCCESS;
+        //if (+packet[NUMBER] == 3 * +packet[LINES_NBR] * +packet[COLUMNS_NBR] / BYTE_PER_PACKET + 1) return EXIT_SUCCESS;
       }
     }
     usleep(RECEPTION_SLEEP_TIME);
