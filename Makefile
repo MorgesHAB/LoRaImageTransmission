@@ -1,10 +1,11 @@
 # LoRa Image Transmission
 # Lionel Isoz
 
-EXE_NAME=TRANSMIT
 CXX=g++
-CPPFILES= Transmitter.cpp
-OFILES = $(CPPFILES:.cpp=.o)  # Take all the .o file associated to the .cc
+CPPFILES= Transmitter.cpp Receiver.cpp
+OFILES = $(CPPFILES:.cpp=.o)
+EXE_Tx=Transmitter
+EXE_Rx=Receiver
 
 INCLUDES_PATH=-I radioheadLib/
 CPPFLAGS=-std=c++11 -g -Wall -DRH_PLATFORM=RH_PLATFORM_RPI -D__RASPBERRY_PI_ $(INCLUDES_PATH)
@@ -16,30 +17,21 @@ RH95_SRCS=lib/radiohead/RH_RF95.cpp \
  	lib/radiohead/RHGenericDriver.cpp
 RH95_OBJS=$(subst .cpp,.o,$(RH95_SRCS))
 
-all: $(EXE_NAME)
+all:
+	@echo "Type : 'make Transmitter' or 'make Receiver'"
 
-$(EXE_NAME): $(OFILES) $(RH95_OBJS)
-	$(CXX) $(LDFLAGS) -o $@ $^
-
+# default command
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) -o $@ -c $<
 
-#Transmitter:
-#	$(CXX) $(CPPFLAGS) $(CPP_TRANSMIT)-o $(EXE_NAME1)
+$(EXE_Tx): Transmitter.o $(RH95_OBJS)
+	$(CXX) $(LDFLAGS) -o $@ $^
 
-#Receiver:
-#	$(CXX) $(CPPFLAGS) $(CPP_RECEIIVER)-o $(EXE_NAME2)
+$(EXE_Rx): Receiver.o $(RH95_OBJS)
+	$(CXX) $(LDFLAGS) -o $@ $^
 
-depend:
-	@echo " *** MISE A JOUR DES DEPENDANCES ***"
-	@(sed '/^# DO NOT DELETE THIS LINE/q' Makefile && \
-	  $(CXX) -MM $(CPPFLAGS) $(CPPFILES) | \
-	  egrep -v "/usr/include" \
-	 ) >Makefile.new
-	@mv Makefile.new Makefile
+Receiver.o: Receiver.cpp define.h
+Transmitter.o: Transmitter.cpp define.h
 
 clean:
-	rm -f $(EXE_NAME) $(RH95_OBJS) $(OFILES)
-
-
-	# DO NOT DELETE THIS LINE
+	rm -f $(RH95_OBJS) $(EXE_Rx) $(EXE_Tx) $(OFILES)
