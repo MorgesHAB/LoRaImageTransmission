@@ -15,6 +15,28 @@
 #include <RH_RF95.h>
 #include "define.h"
 
+
+void buildImage(uint8_t* packet) {
+  std::ofstream file("ImageRx.ppm", std::ios::app);
+  if (file) {
+    if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) {
+      file << "P3" << std::endl;
+      file << +(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R])
+           << " " << +(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]) << std::endl;
+      file << 255 << std::endl; // Max value
+    }
+
+    for (int i(FIRST_IMG_INDEX); i <= +packet[LENGTH]; ++i) {
+      if ((i-FIRST_IMG_INDEX) % 30 == 0) file << std::endl;
+      file << +packet[i] << " ";
+    }
+
+    file.close();
+  } else {
+      std::cout << "Impossible to open the file !" << std::endl;
+  }
+}
+
 class Packet {
 private:
   uint8_t packet[PACKET_INDEX_SIZE];
@@ -137,7 +159,8 @@ public:
   }
 
   void printPacketCollection() const {
-    for (auto& packet : packetCollection) packet->print();
+    for (auto& packet : packetCollection) //packet->print();
+      buildImage(packet->get());
   }
 
   ~Image() {
@@ -156,7 +179,7 @@ int main(int argc, char* argv[]) {
   std::string fileName(argv[IMAGE_NAME]);
 
   Image image(fileName);
-  image.send();
+  //image.send();
   image.printPacketCollection();
 
   return EXIT_SUCCESS;
