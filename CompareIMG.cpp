@@ -9,6 +9,7 @@ int main(int argc, char* argv[]) {
   std::ifstream file2(fileName2, std::ios::in);
 
   if (file1 && file2) {
+    cout << "file open" << endl;
     while (!file1.eof() || !file2.eof()) {
       static int count(0);
       int data1, data2;
