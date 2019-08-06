@@ -155,8 +155,8 @@ public:
     for(auto& packet : packetCollection) {
       rf95.send(packet->get(), PACKET_INDEX_SIZE);
       rf95.waitPacketSent();
-      std::cout << packet->get()[NUMBER] << "/"
-                << packetCollection.size() << " sent" << std::endl;
+      std::cout << +(packet->get()[NUMBER_L] << 8 | packet->get()[NUMBER_R])
+                << "/" << packetCollection.size() << " sent" << std::endl;
     }
   }
 
