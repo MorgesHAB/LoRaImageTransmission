@@ -6,15 +6,15 @@ CPPFILES= Transmitter.cpp Receiver.cpp
 OFILES = $(CPPFILES:.cpp=.o)
 EXE_Tx=Transmitter
 EXE_Rx=Receiver
+LibPath=radioheadLib/
 
-INCLUDES_PATH=-I radioheadLib/
-CPPFLAGS=-std=c++11 -g -Wall -DRH_PLATFORM=RH_PLATFORM_RPI -D__RASPBERRY_PI_ $(INCLUDES_PATH)
+CPPFLAGS=-std=c++11 -g -Wall -DRH_PLATFORM=RH_PLATFORM_RPI -D__RASPBERRY_PI_ -I $(LibPath)
 LDFLAGS=-lwiringPi
 
-RH95_SRCS=radioheadLib/RH_RF95.cpp \
-	radioheadLib/RHGenericSPI.cpp \
-	radioheadLib/RHLinuxSPI.cpp \
- 	radioheadLib/RHGenericDriver.cpp
+RH95_SRCS=$(LibPath)RH_RF95.cpp \
+	$(LibPath)RHGenericSPI.cpp \
+	$(LibPath)RHLinuxSPI.cpp \
+ 	$(LibPath)RHGenericDriver.cpp
 RH95_OBJS=$(subst .cpp,.o,$(RH95_SRCS))
 
 all:
