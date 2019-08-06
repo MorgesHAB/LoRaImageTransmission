@@ -155,12 +155,14 @@ public:
     for(auto& packet : packetCollection) {
       rf95.send(packet->get(), PACKET_INDEX_SIZE);
       rf95.waitPacketSent();
+      std::cout << packet->get()[NUMBER] << "/"
+                << packetCollection.size() << " sent" << std::endl;
     }
   }
 
   void printPacketCollection() const {
-    for (auto& packet : packetCollection) //packet->print();
-      buildImage(packet->get());
+    for (auto& packet : packetCollection) packet->print();
+      //buildImage(packet->get());
   }
 
   ~Image() {
@@ -179,8 +181,8 @@ int main(int argc, char* argv[]) {
   std::string fileName(argv[IMAGE_NAME]);
 
   Image image(fileName);
-  //image.send();
-  image.printPacketCollection();
+  image.send();
+  //image.printPacketCollection();
 
   return EXIT_SUCCESS;
 }
