@@ -10,17 +10,22 @@ int main(int argc, char* argv[]) {
 
   if (file1 && file2) {
     cout << "file open" << endl;
+    bool diff(false);
     while (!file1.eof() || !file2.eof()) {
       static int count(0);
       int data1, data2;
       file1 >> data1;
       file2 >> data2;
       ++count;
-      if (data1 != data2)
+      if (data1 != data2) {
         cout << "diff at " << count  << " : " << data1 << " vs " << data2 << endl;
+        diff = true;
+      }
+    //  else
+      //  cout << "ok " << count  << " : " << data1 << " vs " << data2 << endl;
     }
-
-    file1.close();
+    if(!diff) cout << "files are identical" << endl;
+    fie1.close();
     file2.close();
   }
   return 0;
