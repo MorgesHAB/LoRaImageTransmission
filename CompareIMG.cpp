@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
     bool diff(false);
     while (!file1.eof() || !file2.eof()) {
       static int count(0);
-      int data1, data2;
+      string data1, data2;
       file1 >> data1;
       file2 >> data2;
       ++count;
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
       //  cout << "ok " << count  << " : " << data1 << " vs " << data2 << endl;
     }
     if(!diff) cout << "files are identical" << endl;
-    fie1.close();
+    file1.close();
     file2.close();
   }
   return 0;
