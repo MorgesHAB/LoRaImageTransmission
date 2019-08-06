@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -9,13 +10,13 @@ int main(int argc, char* argv[]) {
 
   if (file1 && file2) {
     while (!file1.eof() || !file2.eof()) {
-      static count(0);
+      static int count(0);
       int data1, data2;
       file1 >> data1;
       file2 >> data2;
       ++count;
       if (data1 != data2)
-        cout << "diff at " << count  << " : " data1 << " vs " << data2 << endl;
+        cout << "diff at " << count  << " : " << data1 << " vs " << data2 << endl;
     }
 
     file1.close();
