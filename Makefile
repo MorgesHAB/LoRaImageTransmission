@@ -11,10 +11,10 @@ INCLUDES_PATH=-I radioheadLib/
 CPPFLAGS=-std=c++11 -g -Wall -DRH_PLATFORM=RH_PLATFORM_RPI -D__RASPBERRY_PI_ $(INCLUDES_PATH)
 LDFLAGS=-lwiringPi
 
-RH95_SRCS=lib/radiohead/RH_RF95.cpp \
-	lib/radiohead/RHGenericSPI.cpp \
-	lib/radiohead/RHLinuxSPI.cpp \
- 	lib/radiohead/RHGenericDriver.cpp
+RH95_SRCS=radioheadLib/RH_RF95.cpp \
+	radioheadLib/RHGenericSPI.cpp \
+	radioheadLib/RHLinuxSPI.cpp \
+ 	radioheadLib/RHGenericDriver.cpp
 RH95_OBJS=$(subst .cpp,.o,$(RH95_SRCS))
 
 all:
