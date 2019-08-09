@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
   std::string fileName(argv[IMAGE_NAME]);
 
   if (fileName == "livePicture") {
-    system("raspistill -o ImgTx.jpg -w 200 -h 100"); // Take a picture with the raspicam
+    system("raspistill -o ImgTx.jpg -hf -vf -w 200 -h 120"); // Take a picture with the raspicam
     // install before :
     // $   sudo apt install imagemagick
     system("convert -compress none ImgTx.jpg ImgTx.ppm");
