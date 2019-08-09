@@ -12,30 +12,9 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <stdlib.h> // to use system()
 #include <RH_RF95.h>
 #include "define.h"
-
-
-void buildImage(uint8_t* packet) {
-  std::ofstream file("ImageRx.ppm", std::ios::app);
-  if (file) {
-    if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) {
-      file << "P3" << std::endl;
-      file << +(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R])
-           << " " << +(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]) << std::endl;
-      file << 255 << std::endl; // Max value
-    }
-
-    for (int i(FIRST_IMG_INDEX); i <= +packet[LENGTH]; ++i) {
-      if ((i-FIRST_IMG_INDEX) % 30 == 0) file << std::endl;
-      file << +packet[i] << " ";
-    }
-
-    file.close();
-  } else {
-      std::cout << "Impossible to open the file !" << std::endl;
-  }
-}
 
 class Packet {
 private:
@@ -162,7 +141,6 @@ public:
 
   void printPacketCollection() const {
     for (auto& packet : packetCollection) packet->print();
-      //buildImage(packet->get());
   }
 
   ~Image() {
@@ -176,9 +154,21 @@ public:
 int main(int argc, char* argv[]) {
   if (argc != 2) {
     std::cout << "Error - syntax is : ./Exec imagetoSend.ppm" << std::endl;
+    std::cout << "               or : ./Exec livePicture" << std::endl;
     exit(0);
   }
   std::string fileName(argv[IMAGE_NAME]);
+
+  if (fileName == "livePicture") {
+    system("raspistill -o ImgTx.jpg -w 200 -h 100"); // Take a picture with the raspicam
+    // install before :
+    // $   sudo apt install imagemagick
+    system("convert -compress none ImgTx.jpg ImgTx.ppm");
+    // convert inverse :
+    // $   convert img.ppm img.jpg
+    std::cout << "Picture taken and converted to ppm format" << std::endl;
+    fileName = "ImgTx.ppm";
+  }
 
   Image image(fileName);
   image.send();
