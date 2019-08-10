@@ -1,13 +1,13 @@
 # LoRa Image Transmission
 # Lionel Isoz
-
+#######################################################
 CXX=g++
 CPPFILES= Transmitter.cpp Receiver.cpp
 OFILES = $(CPPFILES:.cpp=.o)
 EXE_Tx=Transmitter
 EXE_Rx=Receiver
 LibPath=radioheadLib/
-
+#######################################################
 CPPFLAGS=-std=c++11 -g -Wall -DRH_PLATFORM=RH_PLATFORM_RPI -D__RASPBERRY_PI_ -I $(LibPath)
 LDFLAGS=-lwiringPi
 
@@ -16,7 +16,7 @@ RH95_SRCS=$(LibPath)RH_RF95.cpp \
 	$(LibPath)RHLinuxSPI.cpp \
  	$(LibPath)RHGenericDriver.cpp
 RH95_OBJS=$(subst .cpp,.o,$(RH95_SRCS))
-
+#######################################################
 all:
 	@echo "Type : 'make Transmitter' or 'make Receiver'"
 

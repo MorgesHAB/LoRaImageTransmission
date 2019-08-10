@@ -28,9 +28,9 @@
 #define FREQUENCY           868.0   /* MHz */
 #define TX_POWER            23   /* Tx power is from +5 to +23 dBm */
 // config in lib/radiohead/RH_RF95.h at line 437
-#define LORA_MODE           0   // Choose between 0, 1, 2 or 3
-//  0 <=> MEDIUM_RANGE      1 <=> FAST_SHORT_RANGE
-//  2 <=> SLOW_LONG_RANGE   3 <=> MAX_RANGE
-enum {MEDIUM_RANGE = 0, FAST_SHORT_RANGE, SLOW_LONG_RANGE, MAX_RANGE};
+#define LORA_MODE           1   // Choose between 1, 2, 3 or 4
+//  1 <=> MEDIUM_RANGE      2 <=> FAST_SHORT_RANGE
+//  3 <=> SLOW_LONG_RANGE   4 <=> MAX_RANGE
+enum {MEDIUM_RANGE = 1, FAST_SHORT_RANGE, SLOW_LONG_RANGE, MAX_RANGE};
 
 #define RECEPTION_SLEEP_TIME 1  // sleep some number of microseconds
