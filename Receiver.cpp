@@ -81,6 +81,24 @@ void buildImage(uint8_t* packet) {
   }
 }
 
+void TCP(uint8_t* packet) {
+  uint16_t linesNbr(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]);
+  uint16_t colNbr(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R]);
+  int bytePerPacket(BYTE_PER_PACKET);
+  int totalPacket(3 * +linesNbr * +colNbr / bytePerPacket + 1);
+  uint16_t packetNbr(packet[NUMBER_L] << 8 | packet[NUMBER_R]);
+
+  packet[RECEIVED] = true;
+  static bool packetsCheck[totalPacket];
+  packetsCheck[packetNbr] = true;
+  if (packetNbr == totalPacket) {
+    for (int nbr(0); nbr < totalPacket; ++nbr) {
+      if (packetsCheck[nbr] == false)
+        std::cout << "Packet : " << nbr << " not received" << std::endl;
+    }
+  }
+}
+
 
 int main() {
   setupLoRaPHY();
@@ -90,9 +108,9 @@ int main() {
       uint8_t len = sizeof(packet);
 
       if (rf95.recv(packet, &len)) {
+        TCP(packet);
         print(packet);
         buildImage(packet);
-        //if (+packet[NUMBER] == 3 * +packet[LINES_NBR] * +packet[COLUMNS_NBR] / BYTE_PER_PACKET + 1) return EXIT_SUCCESS;
       }
     }
     usleep(RECEPTION_SLEEP_TIME);
