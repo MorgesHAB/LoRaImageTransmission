@@ -10,6 +10,7 @@
 //////////////////////////////////////////////////////////
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <RH_RF95.h>
 #include "define.h"
 
@@ -89,7 +90,7 @@ void TCP(uint8_t* packet) {
   uint16_t packetNbr(packet[NUMBER_L] << 8 | packet[NUMBER_R]);
 
   packet[RECEIVED] = true;
-  static bool packetsCheck[totalPacket];
+  static std::vector<bool> packetsCheck(totalPacket, false);
   packetsCheck[packetNbr] = true;
   if (packetNbr == totalPacket) {
     for (int nbr(0); nbr < totalPacket; ++nbr) {
