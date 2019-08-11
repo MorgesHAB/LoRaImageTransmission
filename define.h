@@ -4,7 +4,7 @@
 // Description : Transmit a PPM Image by a LoRa modem
 //
 // Author : Lionel Isoz
-// Version 3 - 2 août 2019
+// Version 11 août 2019
 //////////////////////////////////////////////////////////
 #define PACKET_INDEX_SIZE   250 // real max = 251
 #define IMAGE_NAME          1   // argv

@@ -4,7 +4,7 @@
 // Description : Transmit a PPM Image by a LoRa modem
 //
 // Author : Lionel Isoz
-// Version 3 - 2 août 2019
+// Version 11 août 2019
 //
 //   ---Transmitter modem---
 //////////////////////////////////////////////////////////

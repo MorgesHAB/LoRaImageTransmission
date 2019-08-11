@@ -4,7 +4,7 @@
 // Description : Transmit a PPM Image by a LoRa modem
 //
 // Author : Lionel Isoz
-// Version 3 - 2 août 2019
+// Version 11 août 2019
 //
 //   ---Reception modem---
 //////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ void print(uint8_t* packet) {
 void buildImage(uint8_t* packet) {
   std::ofstream file(NAME_RX_FILE, std::ios::app);
   if (file) {
-    if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) {
+    if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) { // if first packet
       file << "P3" << std::endl;
       file << +(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R])
            << " " << +(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]) << std::endl;
