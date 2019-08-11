@@ -62,7 +62,7 @@ void print(uint8_t* packet) {
 }
 
 void buildImage(uint8_t* packet) {
-  std::ofstream file("ImageRx.ppm", std::ios::app);
+  std::ofstream file(NAME_RX_FILE, std::ios::app);
   if (file) {
     if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) {
       file << "P3" << std::endl;
@@ -103,6 +103,7 @@ void TCP(uint8_t* packet) {
 
 int main() {
   setupLoRaPHY();
+  remove(NAME_RX_FILE);
   while(true) {
     if (rf95.available()) {
       uint8_t packet[PACKET_INDEX_SIZE];

@@ -153,8 +153,8 @@ public:
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
-    std::cout << "Error - syntax is : ./Exec imagetoSend.ppm" << std::endl;
-    std::cout << "               or : ./Exec livePicture" << std::endl;
+    std::cout << "Error - syntax is : ./Transmitter imagetoSend.ppm" << std::endl;
+    std::cout << "               or : ./Transmitter livePicture" << std::endl;
     exit(0);
   }
   std::string fileName(argv[IMAGE_NAME]);

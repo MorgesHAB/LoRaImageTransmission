@@ -8,6 +8,7 @@
 //////////////////////////////////////////////////////////
 #define PACKET_INDEX_SIZE   250 // real max = 251
 #define IMAGE_NAME          1   // argv
+#define NAME_RX_FILE        "ImageRx.ppm"
 
 // Packet Index - encapsulation order - use : packet[NAME]
 #define NUMBER_L            0   //  L : Left  ( 2 uint8_t = uint16_t )
