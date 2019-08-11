@@ -114,7 +114,8 @@ void TCP(uint8_t* packet) {
       if (packetsCheck[nbr] == false)
         std::cout << "Packet : " << nbr << " not received" << std::endl;
     }
-    //for(auto& packet : packetCollection) print(packet);
+    std::cout << "===========================================" << std::endl;
+    for(int i(0); i < packetCollection.size(); ++i) print(packetCollection[i]);
     buildImage(packetCollection);
   }
 }
