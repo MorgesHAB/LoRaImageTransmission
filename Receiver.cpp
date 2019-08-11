@@ -65,7 +65,7 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
   std::ofstream file(NAME_RX_FILE, std::ios::out);
   if (file) {
     for (auto& packet : packetCollection) {
-      std::cout << "packet " << (packet != nullptr) << std::endl;
+      std::cout << "packet " << +packet[NUMBER_R] << std::endl;
       if (packet != nullptr) {
         if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) { // if first packet
           file << "P3" << std::endl;
@@ -80,6 +80,7 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
         }
       } else {
          // print black
+         std::cout << "Should print black in file" << std::endl;
       }
     }
     file.close();
@@ -95,10 +96,10 @@ void TCP(uint8_t* packet) {
   int totalPacket(3 * +linesNbr * +colNbr / bytePerPacket + 1);
   uint16_t packetNbr(packet[NUMBER_L] << 8 | packet[NUMBER_R]);
 
-  static std::vector<uint8_t*> packetCollection(totalPacket);
+  static std::vector<uint8_t*> packetCollection(totalPacket, nullptr);
   if (packetCollection[packetNbr-1] == nullptr) {
     packetCollection[packetNbr-1] = packet;
-    std::cout << "save" << std::endl;
+    std::cout << "save packet " << +packet[NUMBER_R] << std::endl;
   }
 
   packet[RECEIVED] = true;
@@ -109,8 +110,7 @@ void TCP(uint8_t* packet) {
       if (packetsCheck[nbr] == false)
         std::cout << "Packet : " << nbr << " not received" << std::endl;
     }
-    //buildImage(packetCollection);
-    for (auto& e : packetCollection) std::cout << +e[NUMBER_R] << std::endl;
+    buildImage(packetCollection);
   }
 }
 
