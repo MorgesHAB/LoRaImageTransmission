@@ -181,7 +181,7 @@ int main(int argc, char* argv[]) {
   Image image(fileName);
 
   if (argc == 3) {
-    int packetNbr(argv[PACKET_NUMBER]);
+    size_t packetNbr((size_t)argv[PACKET_NUMBER]);
     image.sendPacketNbr(packetNbr);
     return EXIT_SUCCESS;
   }
