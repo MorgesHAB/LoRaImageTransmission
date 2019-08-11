@@ -181,7 +181,7 @@ int main(int argc, char* argv[]) {
   Image image(fileName);
 
   if (argc == 3) {
-    size_t packetNbr((size_t) std::string (argv[PACKET_NUMBER]));
+    size_t packetNbr = std::stoi(argv[PACKET_NUMBER]);
     image.sendPacketNbr(packetNbr);
     return EXIT_SUCCESS;
   }
