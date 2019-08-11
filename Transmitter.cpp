@@ -130,7 +130,7 @@ public:
       }
   }
 
-  void sendPacketNbr(int nbr) {
+  void sendPacketNbr(size_t nbr) {
     if (nbr > 0 && nbr <= packetCollection.size()) {
       rf95.send(packetCollection[nbr-1]->get(), PACKET_INDEX_SIZE);
       rf95.waitPacketSent();
@@ -169,11 +169,11 @@ void takePicture(std::string& fileName) {
 
 
 int main(int argc, char* argv[]) {
-  if (argc != 2 || argc != 3) {
+  if (argc != 2 && argc != 3) {
     std::cout << "Error - syntax is : ./Transmitter imagetoSend.ppm" << std::endl;
     std::cout << "               or : ./Transmitter livePicture" << std::endl;
     std::cout << "               or : ./Transmitter image.ppm [packetNbr]" << std::endl;
-    exit(0);
+    return EXIT_SUCCESS;
   }
   std::string fileName(argv[IMAGE_NAME]);
   if (fileName == KEY_WORD_PICTURE) takePicture(fileName);
