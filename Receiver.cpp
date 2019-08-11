@@ -90,9 +90,9 @@ void TCP(uint8_t* packet) {
   int totalPacket(3 * +linesNbr * +colNbr / bytePerPacket + 1);
   uint16_t packetNbr(packet[NUMBER_L] << 8 | packet[NUMBER_R]);
 
-  /*static std::vector<uint8_t*> packetCollection(totalPacket);
+  static std::vector<uint8_t*> packetCollection(totalPacket);
   if (packetCollection[packetNbr-1] == nullptr) packetCollection.push_back(packet);
-*/
+
   packet[RECEIVED] = true;
   static std::vector<bool> packetsCheck(totalPacket, false);
   packetsCheck[packetNbr] = true;
@@ -101,6 +101,7 @@ void TCP(uint8_t* packet) {
       if (packetsCheck[nbr] == false)
         std::cout << "Packet : " << nbr << " not received" << std::endl;
     }
+    buildImage(packetCollection);
   }
 }
 
@@ -115,7 +116,6 @@ int main() {
       if (rf95.recv(packet, &len)) {
         print(packet);
         TCP(packet);
-        //buildImage(packet);
       }
     }
     usleep(RECEPTION_SLEEP_TIME);
