@@ -61,21 +61,22 @@ void print(uint8_t* packet) {
   std::cout << std::endl;
 }
 
-void buildImage(uint8_t* packet) {
-  std::ofstream file(NAME_RX_FILE, std::ios::app);
+void buildImage(std::vector<uint8_t*> &packetCollection) {
+  std::ofstream file(NAME_RX_FILE, std::ios::out);
   if (file) {
-    if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) { // if first packet
-      file << "P3" << std::endl;
-      file << +(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R])
-           << " " << +(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]) << std::endl;
-      file << 255 << std::endl; // Max value
+    for (auto& packet : packetCollection) {
+      if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) { // if first packet
+        file << "P3" << std::endl;
+        file << +(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R])
+             << " " << +(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]) << std::endl;
+        file << 255 << std::endl; // Max value
+      }
+      // print content of the image
+      for (int i(FIRST_IMG_INDEX); i <= +packet[LENGTH]; ++i) {
+        if ((i-FIRST_IMG_INDEX) % 30 == 0) file << std::endl;
+        file << +packet[i] << " ";
+      }
     }
-
-    for (int i(FIRST_IMG_INDEX); i <= +packet[LENGTH]; ++i) {
-      if ((i-FIRST_IMG_INDEX) % 30 == 0) file << std::endl;
-      file << +packet[i] << " ";
-    }
-
     file.close();
   } else {
       std::cout << "Impossible to open the file !" << std::endl;
@@ -89,6 +90,9 @@ void TCP(uint8_t* packet) {
   int totalPacket(3 * +linesNbr * +colNbr / bytePerPacket + 1);
   uint16_t packetNbr(packet[NUMBER_L] << 8 | packet[NUMBER_R]);
 
+  /*static std::vector<uint8_t*> packetCollection(totalPacket);
+  if (packetCollection[packetNbr-1] == nullptr) packetCollection.push_back(packet);
+*/
   packet[RECEIVED] = true;
   static std::vector<bool> packetsCheck(totalPacket, false);
   packetsCheck[packetNbr] = true;
@@ -103,7 +107,6 @@ void TCP(uint8_t* packet) {
 
 int main() {
   setupLoRaPHY();
-  remove(NAME_RX_FILE);
   while(true) {
     if (rf95.available()) {
       uint8_t packet[PACKET_INDEX_SIZE];
@@ -112,7 +115,7 @@ int main() {
       if (rf95.recv(packet, &len)) {
         print(packet);
         TCP(packet);
-        buildImage(packet);
+        //buildImage(packet);
       }
     }
     usleep(RECEPTION_SLEEP_TIME);
