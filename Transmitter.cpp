@@ -144,7 +144,7 @@ public:
   }
 
   void send() {
-    for(int i(1); i <= packetCollection.size(); ++i) sendPacketNbr(i);
+    for(size_t i(1); i <= packetCollection.size(); ++i) sendPacketNbr(i);
   }
 
   void printPacketCollection() const {
@@ -181,7 +181,7 @@ int main(int argc, char* argv[]) {
   Image image(fileName);
 
   if (argc == 3) {
-    size_t packetNbr((size_t)argv[PACKET_NUMBER]);
+    size_t packetNbr((size_t) std::string (argv[PACKET_NUMBER]));
     image.sendPacketNbr(packetNbr);
     return EXIT_SUCCESS;
   }
