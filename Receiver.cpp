@@ -65,16 +65,21 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
   std::ofstream file(NAME_RX_FILE, std::ios::out);
   if (file) {
     for (auto& packet : packetCollection) {
-      if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) { // if first packet
-        file << "P3" << std::endl;
-        file << +(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R])
-             << " " << +(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]) << std::endl;
-        file << 255 << std::endl; // Max value
-      }
-      // print content of the image
-      for (int i(FIRST_IMG_INDEX); i <= +packet[LENGTH]; ++i) {
-        if ((i-FIRST_IMG_INDEX) % 30 == 0) file << std::endl;
-        file << +packet[i] << " ";
+      std::cout << "packet " << (packet != nullptr) << std::endl;
+      if (packet != nullptr) {
+        if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) { // if first packet
+          file << "P3" << std::endl;
+          file << +(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R])
+               << " " << +(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]) << std::endl;
+          file << 255 << std::endl; // Max value
+        }
+        // print content of the image
+        for (int i(FIRST_IMG_INDEX); i <= +packet[LENGTH]; ++i) {
+          if ((i-FIRST_IMG_INDEX) % 30 == 0) file << std::endl;
+          file << +packet[i] << " ";
+        }
+      } else {
+         // print black
       }
     }
     file.close();
