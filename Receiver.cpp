@@ -93,7 +93,7 @@ void TCP(uint8_t* packet) {
   static std::vector<bool> packetsCheck(totalPacket, false);
   packetsCheck[packetNbr] = true;
   if (packetNbr == totalPacket) {
-    for (int nbr(0); nbr < totalPacket; ++nbr) {
+    for (int nbr(1); nbr < totalPacket; ++nbr) {
       if (packetsCheck[nbr] == false)
         std::cout << "Packet : " << nbr << " not received" << std::endl;
     }
@@ -110,8 +110,8 @@ int main() {
       uint8_t len = sizeof(packet);
 
       if (rf95.recv(packet, &len)) {
-        TCP(packet);
         print(packet);
+        TCP(packet);
         buildImage(packet);
       }
     }

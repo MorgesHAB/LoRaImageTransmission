@@ -130,14 +130,21 @@ public:
       }
   }
 
-  void send() {
-    for(auto& packet : packetCollection) {
-      rf95.send(packet->get(), PACKET_INDEX_SIZE);
+  void sendPacketNbr(int nbr) {
+    if (nbr > 0 && nbr <= packetCollection.size()) {
+      rf95.send(packetCollection[nbr-1]->get(), PACKET_INDEX_SIZE);
       rf95.waitPacketSent();
-      std::cout << +(packet->get()[NUMBER_L] << 8 | packet->get()[NUMBER_R])
+      std::cout << "Packet " << +(packetCollection[nbr-1]->get()[NUMBER_L]
+                     << 8 | packetCollection[nbr-1]->get()[NUMBER_R])
                 << "/" << packetCollection.size() << " sent" << std::endl;
       usleep(TRANSMISSION_SLEEP_TIME);
+    } else {
+      std::cout << "Packet number invalid" << std::endl;
     }
+  }
+
+  void send() {
+    for(int i(1); i <= packetCollection.size(); ++i) sendPacketNbr(i);
   }
 
   void printPacketCollection() const {
@@ -150,26 +157,34 @@ public:
   }
 };
 
+void takePicture(std::string& fileName) {
+  // Take a picture with the raspicam
+  system("raspistill -o ImgTx.jpg -hf -vf -w 200 -h 120");
+  // install before :  sudo apt install imagemagick
+  system("convert -compress none ImgTx.jpg ImgTx.ppm");
+  // convert inverse :  convert img.ppm img.jpg
+  std::cout << "Picture taken and converted to ppm format" << std::endl;
+  fileName = "ImgTx.ppm";
+}
 
 
 int main(int argc, char* argv[]) {
-  if (argc != 2) {
+  if (argc != 2 || argc != 3) {
     std::cout << "Error - syntax is : ./Transmitter imagetoSend.ppm" << std::endl;
     std::cout << "               or : ./Transmitter livePicture" << std::endl;
+    std::cout << "               or : ./Transmitter image.ppm [packetNbr]" << std::endl;
     exit(0);
   }
   std::string fileName(argv[IMAGE_NAME]);
-
-  if (fileName == "livePicture") {
-    system("raspistill -o ImgTx.jpg -hf -vf -w 200 -h 120"); // Take a picture with the raspicam
-    // install before :  sudo apt install imagemagick
-    system("convert -compress none ImgTx.jpg ImgTx.ppm");
-    // convert inverse :  convert img.ppm img.jpg
-    std::cout << "Picture taken and converted to ppm format" << std::endl;
-    fileName = "ImgTx.ppm";
-  }
+  if (fileName == KEY_WORD_PICTURE) takePicture(fileName);
 
   Image image(fileName);
+
+  if (argc == 3) {
+    int packetNbr(argv[PACKET_NUMBER]);
+    image.sendPacketNbr(packetNbr);
+    return EXIT_SUCCESS;
+  }
   image.send();
   //image.printPacketCollection();
 
