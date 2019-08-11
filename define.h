@@ -34,4 +34,5 @@
 //  3 <=> SLOW_LONG_RANGE   4 <=> MAX_RANGE
 enum {MEDIUM_RANGE = 1, FAST_SHORT_RANGE, SLOW_LONG_RANGE, MAX_RANGE};
 
-#define RECEPTION_SLEEP_TIME 1  // sleep some number of microseconds
+#define RECEPTION_SLEEP_TIME      1       // sleep some number of microseconds
+#define TRANSMISSION_SLEEP_TIME   100000

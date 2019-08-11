@@ -136,6 +136,7 @@ public:
       rf95.waitPacketSent();
       std::cout << +(packet->get()[NUMBER_L] << 8 | packet->get()[NUMBER_R])
                 << "/" << packetCollection.size() << " sent" << std::endl;
+      usleep(TRANSMISSION_SLEEP_TIME);
     }
   }
 
