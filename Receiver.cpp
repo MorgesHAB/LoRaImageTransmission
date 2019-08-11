@@ -105,7 +105,7 @@ void TCP(uint8_t* packet) {
         std::cout << "Packet : " << nbr << " not received" << std::endl;
     }
     //buildImage(packetCollection);
-    for (auto& e : packetCollection) std::cout << e << std::endl;
+    for (auto& e : packetCollection) std::cout << +e[NUMBER_R] << std::endl;
   }
 }
 
