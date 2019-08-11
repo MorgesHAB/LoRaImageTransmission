@@ -99,6 +99,10 @@ void TCP(uint8_t* packet) {
   static std::vector<uint8_t*> packetCollection(totalPacket, nullptr);
   if (packetCollection[packetNbr-1] == nullptr) {
     packetCollection[packetNbr-1] = packet;
+    std::cout << "*****************************************" << std::endl;
+    print(packet);
+    print(packetCollection[packetNbr-1]);
+
     std::cout << "save packet " << +packet[NUMBER_R] << std::endl;
   }
 
@@ -110,7 +114,7 @@ void TCP(uint8_t* packet) {
       if (packetsCheck[nbr] == false)
         std::cout << "Packet : " << nbr << " not received" << std::endl;
     }
-    for(auto& packet : packetCollection) print(packet);
+    //for(auto& packet : packetCollection) print(packet);
     buildImage(packetCollection);
   }
 }
@@ -124,7 +128,7 @@ int main() {
       uint8_t len = sizeof(packet);
 
       if (rf95.recv(packet, &len)) {
-        print(packet);
+        //print(packet);
         TCP(packet);
       }
     }
