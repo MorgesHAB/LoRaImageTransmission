@@ -120,7 +120,8 @@ int main() {
     if (rf95.available()) {
       uint8_t* packet = new uint8_t[PACKET_INDEX_SIZE];
       //uint8_t packet[PACKET_INDEX_SIZE];
-      uint8_t len = sizeof(packet);
+      //uint8_t len = sizeof(packet);
+      uint8_t len = PACKET_INDEX_SIZE;
 
       if (rf95.recv(packet, &len)) {
         print(packet);
