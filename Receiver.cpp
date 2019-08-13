@@ -63,7 +63,6 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
   std::ofstream file(NAME_RX_FILE, std::ios::out);
   if (file) {
     for (auto& packet : packetCollection) {
-      std::cout << "packet " << +packet[NUMBER_R] << std::endl;
       if (packet != nullptr) {
         if ((packet[NUMBER_L] << 8 | packet[NUMBER_R]) == 1) { // if first packet
           file << "P3" << std::endl;
