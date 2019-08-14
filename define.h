@@ -11,6 +11,7 @@
 #define PACKET_NUMBER       2   // argv
 #define NAME_RX_FILE        "ImageRx.ppm"
 #define KEY_WORD_PICTURE    "livePicture"
+#define BLACK               0
 
 // Packet Index - encapsulation order - use : packet[NAME]
 #define NUMBER_L            0   //  L : Left  ( 2 uint8_t = uint16_t )

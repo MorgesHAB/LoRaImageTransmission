@@ -75,9 +75,11 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
           if ((i-FIRST_IMG_INDEX) % 30 == 0) file << std::endl;
           file << +packet[i] << " ";
         }
-      } else {
-         // print black
-         std::cout << "Should print black in file" << std::endl;
+      } else { // print black
+         for (int i(0); i < BYTE_PER_PACKET; ++i) {
+          if ((i-FIRST_IMG_INDEX) % 30 == 0) file << std::endl;
+          file << BLACK << " ";
+        }
       }
     }
     file.close();
