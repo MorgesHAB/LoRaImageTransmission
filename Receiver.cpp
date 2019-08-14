@@ -112,10 +112,10 @@ void TCP(uint8_t* packet) {
     if (allReceived) buildImage(packetCollection);
     else {
       std::cout << "Some packets are missing, would you like to build the" <<
-                    "image whatever [1] or wait that they come [2]" << std::endl;
-                    "Type 1 or 2 to continue : ";
+                    "image whatever [1] or wait that they come [2]" << std::endl
+                    << "Type 1 or 2 to continue : ";
       std::string mode;
-      do { cin >> mode; } while(mode != "1" or mode != "2");
+      do { std::cin >> mode; } while(mode != "1" or mode != "2");
 
       if (mode == "1") buildImage(packetCollection);
     }
