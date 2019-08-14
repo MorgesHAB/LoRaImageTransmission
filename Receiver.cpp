@@ -113,11 +113,11 @@ void TCP(uint8_t* packet) {
     }
     if (allReceived) buildImage(packetCollection);
     else {
-      std::cout << "Some packets are missing, would you like to build the" <<
+      std::cout << "Some packets are missing, would you like to build the " <<
                     "image whatever [1] or wait that they come [2]" << std::endl
                     << "Type 1 or 2 to continue : ";
       std::string mode;
-      do { std::cin >> mode; } while(mode != "1" or mode != "2");
+      do { std::cin >> mode; } while(mode != "1" && mode != "2");
       std::cout << "ok mode " << mode << " is actived";
       if (mode == "1") buildImage(packetCollection);
     }
@@ -130,6 +130,7 @@ int main() {
   setupLoRaPHY(rf95);
   while(true) {
     if (rf95.available()) {
+      std::cout << "Recpetion actived... Waiting for packets" std::endl;
       uint8_t* packet = new uint8_t[PACKET_INDEX_SIZE];
       //uint8_t packet[PACKET_INDEX_SIZE];
       //uint8_t len = sizeof(packet);
