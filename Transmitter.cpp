@@ -159,7 +159,7 @@ public:
 
 void takePicture(std::string& fileName) {
   // Take a picture with the raspicam
-  system("raspistill -o ImgTx.jpg -hf -vf -w 200 -h 120");
+  system("raspistill -o ImgTx.jpg -hf -vf -w 300 -h 200");
   // install before :  sudo apt install imagemagick
   system("convert -compress none ImgTx.jpg ImgTx.ppm");
   // convert inverse :  convert img.ppm img.jpg

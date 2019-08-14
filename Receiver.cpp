@@ -86,6 +86,8 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
   } else {
       std::cout << "Impossible to open the file !" << std::endl;
   }
+  for (auto& packet : packetCollection) delete[] packet;
+  packetCollection.clear();
 }
 
 void TCP(uint8_t* packet) {
@@ -99,17 +101,24 @@ void TCP(uint8_t* packet) {
   if (packetCollection[packetNbr-1] == nullptr) {
     packetCollection[packetNbr-1] = packet;
   }
-  packet[RECEIVED] = true;
-  static std::vector<bool> packetsCheck(totalPacket, false);
-  packetsCheck[packetNbr] = true;
+
   if (packetNbr == totalPacket) {
-    for (int nbr(1); nbr < totalPacket; ++nbr) {
-      if (packetsCheck[nbr] == false)
+    bool allReceived(true);
+    for (int nbr(1); nbr <= totalPacket; ++nbr) {
+      if (packetCollection[nbr] == nullptr)
         std::cout << "Packet : " << nbr << " not received" << std::endl;
+        allReceived = false;
     }
-    buildImage(packetCollection);
-    for (auto& packet : packetCollection) delete[] packet;
-    packetCollection.clear();
+    if (allReceived) buildImage(packetCollection);
+    else {
+      std::cout << "Some packets are missing, would you like to build the" <<
+                    "image whatever [1] or wait that they come [2]" << std::endl;
+                    "Type 1 or 2 to continue : ";
+      std::string mode;
+      do { cin >> mode; } while(mode != "1" or mode != "2");
+
+      if (mode == "1") buildImage(packetCollection);
+    }
   }
 }
 
