@@ -108,9 +108,10 @@ void TCP(uint8_t* packet) {
     bool allReceived(true);
     for (int nbr(0); nbr < totalPacket; ++nbr) { // warning indexes
       if (packetCollection[nbr] == nullptr)
-        std::cout << "Packet : " << nbr << " not received" << std::endl;
+        std::cout << "Packet : " << nbr+1 << " not received" << std::endl;
         allReceived = false;
     }
+    std::cout << "packet all received : " << (allReceived)?"YES":"NO" << std::endl;
     if (allReceived) buildImage(packetCollection);
     else {
       std::cout << "Some packets are missing, would you like to build the " <<
@@ -128,7 +129,7 @@ void TCP(uint8_t* packet) {
 int main() {
   RH_RF95 rf95;
   setupLoRaPHY(rf95);
-  std::cout << "Recpetion enabled... Waiting for packets" << std::endl;
+  std::cout << "\nRecpetion enabled... Waiting for packets\n" << std::endl;
   while(true) {
     if (rf95.available()) {
       uint8_t* packet = new uint8_t[PACKET_INDEX_SIZE];
