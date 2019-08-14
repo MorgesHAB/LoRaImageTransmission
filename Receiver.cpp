@@ -130,7 +130,7 @@ int main() {
   setupLoRaPHY(rf95);
   while(true) {
     if (rf95.available()) {
-      std::cout << "Recpetion actived... Waiting for packets" std::endl;
+      std::cout << "Recpetion actived... Waiting for packets" << std::endl;
       uint8_t* packet = new uint8_t[PACKET_INDEX_SIZE];
       //uint8_t packet[PACKET_INDEX_SIZE];
       //uint8_t len = sizeof(packet);
