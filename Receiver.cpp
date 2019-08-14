@@ -107,11 +107,12 @@ void TCP(uint8_t* packet) {
   if (packetNbr == totalPacket) {
     bool allReceived(true);
     for (int nbr(0); nbr < totalPacket; ++nbr) { // warning indexes
-      if (packetCollection[nbr] == nullptr)
+      if (packetCollection[nbr] == nullptr) {
         std::cout << "Packet : " << nbr+1 << " not received" << std::endl;
         allReceived = false;
+      }
     }
-    std::cout << "packet all received : " << (allReceived)?"YES":"NO" << std::endl;
+    std::cout << "packet all received : " << ((allReceived)?"YES":"NO") << std::endl;
     if (allReceived) buildImage(packetCollection);
     else {
       std::cout << "Some packets are missing, would you like to build the " <<
