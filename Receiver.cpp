@@ -86,8 +86,10 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
   } else {
       std::cout << "Impossible to open the file !" << std::endl;
   }
+  std::cout << "Building finished : the image is available as ImageRx.ppm" << std::endl;
   for (auto& packet : packetCollection) delete[] packet;
   packetCollection.clear();
+  exit(0);
 }
 
 void TCP(uint8_t* packet) {
@@ -116,7 +118,7 @@ void TCP(uint8_t* packet) {
                     << "Type 1 or 2 to continue : ";
       std::string mode;
       do { std::cin >> mode; } while(mode != "1" or mode != "2");
-
+      std::cout << "ok mode " << mode << " is actived";
       if (mode == "1") buildImage(packetCollection);
     }
   }
