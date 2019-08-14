@@ -106,7 +106,7 @@ void TCP(uint8_t* packet) {
 
   if (packetNbr == totalPacket) {
     bool allReceived(true);
-    for (int nbr(1); nbr <= totalPacket; ++nbr) {
+    for (int nbr(0); nbr < totalPacket; ++nbr) { // warning indexes
       if (packetCollection[nbr] == nullptr)
         std::cout << "Packet : " << nbr << " not received" << std::endl;
         allReceived = false;
@@ -118,7 +118,7 @@ void TCP(uint8_t* packet) {
                     << "Type 1 or 2 to continue : ";
       std::string mode;
       do { std::cin >> mode; } while(mode != "1" && mode != "2");
-      std::cout << "ok mode " << mode << " is actived";
+      std::cout << "ok mode " << mode << " is activated" << std::endl;
       if (mode == "1") buildImage(packetCollection);
     }
   }
