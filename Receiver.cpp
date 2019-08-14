@@ -128,9 +128,9 @@ void TCP(uint8_t* packet) {
 int main() {
   RH_RF95 rf95;
   setupLoRaPHY(rf95);
+  std::cout << "Recpetion enabled... Waiting for packets" << std::endl;
   while(true) {
     if (rf95.available()) {
-      std::cout << "Recpetion actived... Waiting for packets" << std::endl;
       uint8_t* packet = new uint8_t[PACKET_INDEX_SIZE];
       //uint8_t packet[PACKET_INDEX_SIZE];
       //uint8_t len = sizeof(packet);
