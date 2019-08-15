@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <stdlib.h> // to use system()
 #include <RH_RF95.h>
 #include "define.h"
 
@@ -89,6 +90,7 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
   std::cout << "Building finished : the image is available as ImageRx.ppm" << std::endl;
   for (auto& packet : packetCollection) delete[] packet;
   packetCollection.clear();
+  system("convert ImageRx.ppm ImageRx.jpg");
   exit(0);
 }
 
