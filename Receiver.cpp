@@ -100,11 +100,13 @@ void TCP(uint8_t* packet) {
   uint16_t packetNbr(packet[NUMBER_L] << 8 | packet[NUMBER_R]);
 
   static std::vector<uint8_t*> packetCollection(totalPacket, nullptr);
+  static int packetcounter(0);
   if (packetCollection[packetNbr-1] == nullptr) {
     packetCollection[packetNbr-1] = packet;
+    ++packetcounter;
   }
 
-  if (packetNbr == totalPacket) {
+  if (packetNbr == totalPacket || packetcounter == totalPacket) {
     bool allReceived(true);
     for (int nbr(0); nbr < totalPacket; ++nbr) { // warning indexes
       if (packetCollection[nbr] == nullptr) {
