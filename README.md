@@ -2,9 +2,13 @@
 
 # LoRa Image Transmission Project
 
+### Description : Transmit a PPM Image by a LoRa modem ###
+
 ```
 sudo apt-get update
 sudo apt-get upgrade    y
+
+sudo apt install imagemagick
 
 sudo apt install apache2
 
