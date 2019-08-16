@@ -1,6 +1,18 @@
+<img src="/Img/LogoMHAB.png" width=150 align="right" >
+
 # LoRa Image Transmission Project
 
-### Description : Transmit a PPM Image by a LoRa modem
+## Goal : Transmit an image with two LoRa modem 
+
+### Description : Transmit a ppm image or an image taken with a raspberry Pi Camera
+
+## Use Syntax
+```
+./Transmitter image.ppm
+./Transmitter livePicture
+./Transmitter image.ppm [packet number]
+
+```
 
 -----------------------------------------------------------------
 ## Installation of image magick
@@ -32,4 +44,4 @@ Now you can check that the server is working by typing the IP adresse of the Pi 
 for example :  `192.32.12.45`
 
 
-<img src="/Img/LoRa.png" >
+<img src="/Img/LoRa.png" width=800>
