@@ -30,3 +30,6 @@ echo "<?php phpinfo(); ?>" > /var/www/html/index.php
 ```
 Now you can check that the server is working by typing the IP adresse of the Pi on a web browser.
 for example :  `192.32.12.45`
+
+
+<img src="/Img/LoRa.png" >
