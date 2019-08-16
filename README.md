@@ -1,8 +1,9 @@
 # LoRa Image Transmission Project
 
-### Description : Transmit a PPM Image by a LoRa modem ###
+### Description : Transmit a PPM Image by a LoRa modem
 
-
+-----------------------------------------------------------------
+## Installation of image magick
 First you need to update & upgrade your Raspberry Pi
 ```
 sudo apt-get update
@@ -13,10 +14,9 @@ Then we need to install imagemagick to convert jpg and ppm image
 `sudo apt install imagemagick`
 
 -----------------------------------------------------------------
-Installation of a web server to read the image
+## Installation of a web server to read the image
 `sudo apt install apache2`
-
-
+Change the right of this directory
 ```
 sudo chown -R pi:www-data /var/www/html/
 sudo chmod -R 770 /var/www/html/
