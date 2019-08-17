@@ -50,10 +50,9 @@ void print(uint8_t* packet) {
   std::cout << " | Packet n° " << packetNbr << " / " << totalPacket
             << " | Length : " << +packet[LENGTH]
             << " | Sent " << +packet[SENT_NBR] << " time(s)"
-            << " | Received : " << ((+packet[RECEIVED])?"YES!":"NO!")
             << " | Image -  " << +linesNbr << " Lines & " << +colNbr << " Columns";
   std::cout << " | Image Data : " << std::endl;
-  for (int i(FIRST_IMG_INDEX); i <= LAST_IMG_INDEX; ++i) {
+  for (int i(FIRST_DATA_INDEX); i <= LAST_DATA_INDEX; ++i) {
     std::cout << +packet[i] << " ";
     if (i % 50 == 0) std::cout << std::endl;
   }
@@ -72,13 +71,13 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
           file << 255 << std::endl; // Max value
         }
         // print content of the image
-        for (int i(FIRST_IMG_INDEX); i <= +packet[LENGTH]; ++i) {
-          if ((i-FIRST_IMG_INDEX) % 30 == 0) file << std::endl;
+        for (int i(FIRST_DATA_INDEX); i <= +packet[LENGTH]; ++i) {
+          if ((i-FIRST_DATA_INDEX) % 30 == 0) file << std::endl;
           file << +packet[i] << " ";
         }
       } else { // print black
          for (int i(0); i < BYTE_PER_PACKET; ++i) {
-          if ((i-FIRST_IMG_INDEX) % 30 == 0) file << std::endl;
+          if ((i-FIRST_DATA_INDEX) % 30 == 0) file << std::endl;
           file << BLACK << " ";
         }
       }
@@ -87,11 +86,24 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
   } else {
       std::cout << "Impossible to open the file !" << std::endl;
   }
-  std::cout << "Building finished : the image is available as ImageRx.ppm" << std::endl;
-  for (auto& packet : packetCollection) delete[] packet;
+  for (auto& packet : packetCollection) delete[] packet;    // release memory
   packetCollection.clear();
   system("convert ImageRx.ppm ImageRx.jpg");
+  std::cout << "Building finished : the image is available as ImageRx.ppm " <<
+                "& ImageRx.jpg" << std::endl;
   exit(0);
+}
+
+void askForMissingPacket(std::vector<uint8_t*> &packetCollection, int totalPacket) {
+  uint8_t packet[PACKET_INDEX_SIZE];
+  for (int nbr(0), int index(FIRST_DATA_INDEX); nbr < totalPacket && index < LAST_DATA_INDEX; ++nbr, index+=2) { // warning indexes
+    if (packetCollection[nbr] == nullptr) {
+      packet[index] = packetCollection[nbr][NUMBER_L];
+      packet[index+1] = packetCollection[nbr][NUMBER_R];
+    }
+  }
+  rf95.send(packet, PACKET_INDEX_SIZE);
+  rf95.waitPacketSent();
 }
 
 void TCP(uint8_t* packet) {
@@ -120,12 +132,13 @@ void TCP(uint8_t* packet) {
     if (allReceived) buildImage(packetCollection);
     else {
       std::cout << "Some packets are missing, would you like to build the " <<
-                    "image whatever [1] or wait that they come [2]" << std::endl
-                    << "Type 1 or 2 to continue : ";
+                    "image whatever [1] or wait that they come [2] or start the automatic TCP manager [3]" << std::endl
+                    << "Type 1, 2 or 3 to continue : ";
       std::string mode;
-      do { std::cin >> mode; } while(mode != "1" && mode != "2");
+      do { std::cin >> mode; } while(mode != "1" && mode != "2" && mode != "3");
       std::cout << "ok mode " << mode << " is activated" << std::endl;
       if (mode == "1") buildImage(packetCollection);
+      if (mode == "3") askForMissingPacket(packetCollection, totalPacket);
     }
   }
 }
@@ -138,8 +151,6 @@ int main() {
   while(true) {
     if (rf95.available()) {
       uint8_t* packet = new uint8_t[PACKET_INDEX_SIZE];
-      //uint8_t packet[PACKET_INDEX_SIZE];
-      //uint8_t len = sizeof(packet);
       uint8_t len = PACKET_INDEX_SIZE;
 
       if (rf95.recv(packet, &len)) {

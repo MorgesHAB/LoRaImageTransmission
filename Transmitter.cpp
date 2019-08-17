@@ -25,11 +25,10 @@ public:
     static uint16_t packetNumber(0);
     packet[NUMBER_L] = (++packetNumber) >> 8;
     packet[NUMBER_R] = packetNumber;
-    packet[SENT_NBR] = 1;
-    packet[RECEIVED] = 0;
+    packet[SENT_NBR] = 0;
 
     int data;
-    for (int i(FIRST_IMG_INDEX); i <= LAST_IMG_INDEX && !file.eof(); ++i) {
+    for (int i(FIRST_DATA_INDEX); i <= LAST_DATA_INDEX && !file.eof(); ++i) {
       file >> data;
       uint8_t data8(data);
       packet[i] = data8;
@@ -55,10 +54,9 @@ public:
     std::cout << " | Packet n° " << packetNbr << " / " << totalPacket
               << " | Length : " << +packet[LENGTH]
               << " | Sent " << +packet[SENT_NBR] << " time(s)"
-              << " | Received : " << ((+packet[RECEIVED])?"YES!":"NO!")
               << " | Image -  " << +linesNbr << " Lines & " << +colNbr << " Columns";
       std::cout << " | Image Data : " << std::endl;
-      for (int i(FIRST_IMG_INDEX); i <= LAST_IMG_INDEX; ++i) {
+      for (int i(FIRST_DATA_INDEX); i <= LAST_DATA_INDEX; ++i) {
         std::cout << +packet[i] << " ";
         if (i % 50 == 0) std::cout << std::endl;
       }
@@ -132,6 +130,7 @@ public:
 
   void sendPacketNbr(size_t nbr) {
     if (nbr > 0 && nbr <= packetCollection.size()) {
+      ++packetCollection[nbr-1]->get()[SENT_NBR];
       rf95.send(packetCollection[nbr-1]->get(), PACKET_INDEX_SIZE);
       rf95.waitPacketSent();
       std::cout << "Packet " << +(packetCollection[nbr-1]->get()[NUMBER_L]
@@ -151,6 +150,27 @@ public:
     for (auto& packet : packetCollection) packet->print();
   }
 
+  void sendMissingPacket() {
+    while(true) {
+      if (rf95.available()) {
+        uint8_t* packet = new uint8_t[PACKET_INDEX_SIZE];
+        uint8_t len = PACKET_INDEX_SIZE;
+
+        if (rf95.recv(packet, &len)) {
+          if (packet[NBR_PACKET_TO_SEND_AGAIN] == 0) {
+            std::cout << "All packets have been received, process finished" << std::endl;
+            exit(0);
+          }
+          for (int i(FIRST_DATA_INDEX); i <= LAST_DATA_INDEX; i+=2) {
+            uint16_t nbr(packet[i] << 8 | packet[i+1]);
+            sendPacketNbr(nbr);
+          }
+        }
+      }
+      usleep(RECEPTION_SLEEP_TIME);
+    }
+  }
+
   ~Image() {
     for (auto& packet : packetCollection) delete packet;
     packetCollection.clear();
@@ -159,12 +179,12 @@ public:
 
 void takePicture(std::string& fileName) {
   // Take a picture with the raspicam
-  system("raspistill -o ImgTx.jpg -hf -vf -w 300 -h 200");
+  system("raspistill -o ImageTx.jpg -hf -vf -w 300 -h 200");
   // install before :  sudo apt install imagemagick
-  system("convert -compress none ImgTx.jpg ImgTx.ppm");
+  system("convert -compress none ImageTx.jpg ImageTx.ppm");
   // convert inverse :  convert img.ppm img.jpg
   std::cout << "Picture taken and converted to ppm format" << std::endl;
-  fileName = "ImgTx.ppm";
+  fileName = "ImageTx.ppm";
 }
 
 
@@ -186,7 +206,11 @@ int main(int argc, char* argv[]) {
     return EXIT_SUCCESS;
   }
   image.send();
-  //image.printPacketCollection();
+  std::cout << "All packets have been sent 1 time" << std::endl;
+  std::cout << "Waiting for response of the receiver..." << std::endl;
+  while(true) {
+    image.sendMissingPacket();
+  }
 
   return EXIT_SUCCESS;
 }
