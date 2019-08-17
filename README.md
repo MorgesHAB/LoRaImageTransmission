@@ -2,7 +2,7 @@
 
 # LoRa Image Transmission Project
 
-## Goal : Transmit an image with two LoRa modem 
+## Goal : Transmit an image with two LoRa modem
 
 ### Description : Transmit a ppm image or an image taken with a raspberry Pi Camera
 
@@ -11,7 +11,6 @@
 ./Transmitter image.ppm
 ./Transmitter livePicture
 ./Transmitter image.ppm [packet number]
-
 ```
 
 -----------------------------------------------------------------
