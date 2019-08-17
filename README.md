@@ -21,18 +21,24 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 Then we need to install imagemagick to convert jpg and ppm image
-```sudo apt install imagemagick```
+```
+sudo apt install imagemagick
+```
 
 -----------------------------------------------------------------
 ## Installation of a web server to read the image
-```sudo apt install apache2```
+```
+sudo apt install apache2
+```
 Change the right of this directory
 ```
 sudo chown -R pi:www-data /var/www/html/
 sudo chmod -R 770 /var/www/html/
 ```
 Then install php
-```sudo apt-get intsall php5 libapache2-mod-php5```
+```
+sudo apt-get intsall php5 libapache2-mod-php5
+```
 Now we will program in php so delete the html file and create a php one
 ```
 sudo rm /var/www/html/index.html
