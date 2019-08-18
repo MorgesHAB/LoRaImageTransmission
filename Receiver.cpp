@@ -71,7 +71,7 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
           file << 255 << std::endl; // Max value
         }
         // print content of the image
-        for (int i(FIRST_DATA_INDEX); i <= +packet[LENGTH]; ++i) {
+        for (int i(FIRST_DATA_INDEX); i <= packet[LENGTH]; ++i) {
           if ((i-FIRST_DATA_INDEX) % 30 == 0) file << std::endl;
           file << +packet[i] << " ";
         }
@@ -101,9 +101,11 @@ void askForMissingPacket(std::vector<uint8_t*> &packetCollection, int totalPacke
     if (packetCollection[nbr] == nullptr) {
       packet[index] = nbr >> 8;
       packet[index+1] = nbr;
-      std::cout << "assignment" << std::endl;
+      std::cout << "assignment " << +nbr << std::endl;
     }
   }
+  packet[LENGTH] = index+1;
+  packet[NBR_PACKET_TO_SEND_AGAIN] = (index + 1 - FIRST_DATA_INDEX) / 2;
   rf95.send(packet, PACKET_INDEX_SIZE);
   rf95.waitPacketSent();
   std::cout << "Packet response sent" << std::endl;

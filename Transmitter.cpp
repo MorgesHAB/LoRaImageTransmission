@@ -153,7 +153,7 @@ public:
   void sendMissingPacket() {
     while(true) {
       if (rf95.available()) {
-        uint8_t* packet = new uint8_t[PACKET_INDEX_SIZE];
+        uint8_t packet[PACKET_INDEX_SIZE]; // use new if want to save
         uint8_t len = PACKET_INDEX_SIZE;
 
         if (rf95.recv(packet, &len)) {
@@ -161,7 +161,7 @@ public:
             std::cout << "All packets have been received, process finished" << std::endl;
             exit(0);
           }
-          for (int i(FIRST_DATA_INDEX); i <= LAST_DATA_INDEX; i+=2) {
+          for (int i(FIRST_DATA_INDEX); i < packet[LENGTH]; i+=2) {
             uint16_t nbr(packet[i] << 8 | packet[i+1]);
             sendPacketNbr(nbr);
           }
