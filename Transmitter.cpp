@@ -153,18 +153,21 @@ public:
   void sendMissingPacket() {
     while(true) {
       if (rf95.available()) {
+        std::cout << "A missing packets request have been received" << std::endl;
         uint8_t packet[PACKET_INDEX_SIZE]; // use new if want to save
         uint8_t len = PACKET_INDEX_SIZE;
 
         if (rf95.recv(packet, &len)) {
           if (packet[NBR_PACKET_TO_SEND_AGAIN] == 0) {
-            std::cout << "All packets have been received, process finished" << std::endl;
+            std::cout << "|| All packets have been received, process finished ||" << std::endl;
             exit(0);
           }
           for (int i(FIRST_DATA_INDEX); i < packet[LENGTH]; i+=2) {
             uint16_t nbr(packet[i] << 8 | packet[i+1]);
             sendPacketNbr(nbr);
           }
+          std::cout << "Missing packets have been sent again" << std::endl;
+          std::cout << "Waiting for another missing packets request or a confirmation that all packets have been received" << std::endl;
         }
       }
       usleep(RECEPTION_SLEEP_TIME);
@@ -208,9 +211,7 @@ int main(int argc, char* argv[]) {
   image.send();
   std::cout << "All packets have been sent 1 time" << std::endl;
   std::cout << "Waiting for response of the receiver..." << std::endl;
-  while(true) {
-    image.sendMissingPacket();
-  }
+  image.sendMissingPacket();
 
   return EXIT_SUCCESS;
 }

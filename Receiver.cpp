@@ -98,18 +98,17 @@ void askForMissingPacket(std::vector<uint8_t*> &packetCollection, int totalPacke
   uint8_t packet[PACKET_INDEX_SIZE];
   int index(FIRST_DATA_INDEX);
   for (uint16_t nbr(0); nbr < totalPacket && index < LAST_DATA_INDEX; ++nbr) { // warning indexes
-    if (packetCollection[nbr] == nullptr) {
+    if (packetCollection[nbr] == nullptr) { // not received
       packet[index] = (nbr+1) >> 8;
       packet[index+1] = nbr+1;
       index+=2;
-      std::cout << "assignment " << +nbr << std::endl;
     }
   }
   packet[LENGTH] = index+1;
   packet[NBR_PACKET_TO_SEND_AGAIN] = (index + 1 - FIRST_DATA_INDEX) / 2;
   rf95.send(packet, PACKET_INDEX_SIZE);
   rf95.waitPacketSent();
-  std::cout << "Packet response sent" << std::endl;
+  std::cout << "Missing Packets response sent" << std::endl;
 }
 
 void TCP(uint8_t* packet, RH_RF95& rf95) {
@@ -120,12 +119,14 @@ void TCP(uint8_t* packet, RH_RF95& rf95) {
   uint16_t packetNbr(packet[NUMBER_L] << 8 | packet[NUMBER_R]);
 
   static std::vector<uint8_t*> packetCollection(totalPacket, nullptr);
+  static std::string mode("0");
   static int packetcounter(0);
   if (packetCollection[packetNbr-1] == nullptr) {
     packetCollection[packetNbr-1] = packet;
     ++packetcounter;
   }
 
+  if (mode == "3") askForMissingPacket(packetCollection, totalPacket, rf95);
   if (packetNbr == totalPacket || packetcounter == totalPacket) {
     bool allReceived(true);
     for (int nbr(0); nbr < totalPacket; ++nbr) { // warning indexes
@@ -138,9 +139,8 @@ void TCP(uint8_t* packet, RH_RF95& rf95) {
     if (allReceived) buildImage(packetCollection);
     else {
       std::cout << "Some packets are missing, would you like to build the " <<
-                    "image whatever [1] or wait that they come [2] or start the automatic TCP manager [3]" << std::endl
+                    "image whatever [1], wait that they come [2] or start the automatic TCP manager [3]" << std::endl
                     << "Type 1, 2 or 3 to continue : ";
-      std::string mode;
       do { std::cin >> mode; } while(mode != "1" && mode != "2" && mode != "3");
       std::cout << "ok mode " << mode << " is activated" << std::endl;
       if (mode == "1") buildImage(packetCollection);
