@@ -97,10 +97,11 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
 void askForMissingPacket(std::vector<uint8_t*> &packetCollection, int totalPacket, RH_RF95& rf95) {
   uint8_t packet[PACKET_INDEX_SIZE];
   int index(FIRST_DATA_INDEX);
-  for (uint16_t nbr(0); nbr < totalPacket && index < LAST_DATA_INDEX; ++nbr, index+=2) { // warning indexes
+  for (uint16_t nbr(0); nbr < totalPacket && index < LAST_DATA_INDEX; ++nbr) { // warning indexes
     if (packetCollection[nbr] == nullptr) {
       packet[index] = nbr >> 8;
       packet[index+1] = nbr;
+      index+=2;
       std::cout << "assignment " << +nbr << std::endl;
     }
   }
