@@ -99,8 +99,8 @@ void askForMissingPacket(std::vector<uint8_t*> &packetCollection, int totalPacke
   int index(FIRST_DATA_INDEX);
   for (uint16_t nbr(0); nbr < totalPacket && index < LAST_DATA_INDEX; ++nbr) { // warning indexes
     if (packetCollection[nbr] == nullptr) {
-      packet[index] = nbr >> 8;
-      packet[index+1] = nbr;
+      packet[index] = (nbr+1) >> 8;
+      packet[index+1] = nbr+1;
       index+=2;
       std::cout << "assignment " << +nbr << std::endl;
     }

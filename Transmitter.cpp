@@ -163,7 +163,6 @@ public:
           }
           for (int i(FIRST_DATA_INDEX); i < packet[LENGTH]; i+=2) {
             uint16_t nbr(packet[i] << 8 | packet[i+1]);
-            std::cout << "---> " << +nbr << std::endl;
             sendPacketNbr(nbr);
           }
         }
