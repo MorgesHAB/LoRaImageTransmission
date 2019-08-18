@@ -101,11 +101,11 @@ void askForMissingPacket(std::vector<uint8_t*> &packetCollection, RH_RF95& rf95)
     if (packetCollection[nbr] == nullptr) { // not received
       packet[index] = (nbr+1) >> 8;
       packet[index+1] = nbr+1;
+      packet[LENGTH] = index+1;
+      packet[NBR_PACKET_TO_SEND_AGAIN] = (index + 1 - FIRST_DATA_INDEX) / 2;
       index+=2;
     }
   }
-  packet[LENGTH] = index+1;
-  packet[NBR_PACKET_TO_SEND_AGAIN] = (index + 1 - FIRST_DATA_INDEX) / 2;
   rf95.send(packet, PACKET_INDEX_SIZE);
   rf95.waitPacketSent();
   std::cout << "Missing Packets request sent" << std::endl;

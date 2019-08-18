@@ -130,13 +130,13 @@ public:
 
   void sendPacketNbr(uint16_t nbr) {
     if (nbr > 0 && nbr <= packetCollection.size()) {
+      usleep(TRANSMISSION_SLEEP_TIME);
       ++packetCollection[nbr-1]->get()[SENT_NBR];
       rf95.send(packetCollection[nbr-1]->get(), PACKET_INDEX_SIZE);
       rf95.waitPacketSent();
       std::cout << "Packet " << +(packetCollection[nbr-1]->get()[NUMBER_L]
                      << 8 | packetCollection[nbr-1]->get()[NUMBER_R])
                 << "/" << packetCollection.size() << " sent" << std::endl;
-      usleep(TRANSMISSION_SLEEP_TIME);
     } else {
       std::cout << "Packet number invalid" << std::endl;
     }
