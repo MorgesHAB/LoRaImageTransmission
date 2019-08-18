@@ -153,7 +153,7 @@ public:
   void sendMissingPacket() {
     while(true) {
       if (rf95.available()) {
-        std::cout << "A missing packets request have been received" << std::endl;
+        std::cout << "A request have been received" << std::endl;
         uint8_t packet[PACKET_INDEX_SIZE]; // use new if want to save
         uint8_t len = PACKET_INDEX_SIZE;
 
@@ -166,6 +166,7 @@ public:
             uint16_t nbr(packet[i] << 8 | packet[i+1]);
             sendPacketNbr(nbr);
           }
+          sendPacketNbr(packetCollection.size()); // cheat
           std::cout << "Missing packets have been sent again" << std::endl;
           std::cout << "Waiting for another missing packets request or a confirmation that all packets have been received" << std::endl;
         }
