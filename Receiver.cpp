@@ -102,7 +102,7 @@ void askForMissingPacket(std::vector<uint8_t*> &packetCollection, RH_RF95& rf95)
       packet[index] = (nbr+1) >> 8;
       packet[index+1] = nbr+1;
       packet[LENGTH] = index+1;
-      packet[NBR_PACKET_TO_SEND_AGAIN] = (index + 1 - FIRST_DATA_INDEX) / 2;
+      packet[NBR_PACKET_TO_SEND_AGAIN] = (index + 2 - FIRST_DATA_INDEX) / 2;
       index+=2;
     }
   }
@@ -127,7 +127,6 @@ void TCP(uint8_t* packet, RH_RF95& rf95) {
   uint16_t packetNbr(packet[NUMBER_L] << 8 | packet[NUMBER_R]);
 
   static std::vector<uint8_t*> packetCollection(totalPacket, nullptr);
-  static std::string mode("0");
   static int packetcounter(0);
   if (packetCollection[packetNbr-1] == nullptr) {
     packetCollection[packetNbr-1] = packet;
@@ -151,6 +150,7 @@ void TCP(uint8_t* packet, RH_RF95& rf95) {
       std::cout << "Some packets are missing, would you like to build the " <<
                     "image whatever [1], wait that they come [2] or start the automatic TCP manager [3]" << std::endl
                     << "Type 1, 2 or 3 to continue : ";
+      std::string mode;
       do { std::cin >> mode; } while(mode != "1" && mode != "2" && mode != "3");
       std::cout << "ok mode " << mode << " is activated" << std::endl;
       if (mode == "1") buildImage(packetCollection);
