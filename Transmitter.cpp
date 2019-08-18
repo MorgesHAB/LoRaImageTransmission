@@ -210,7 +210,7 @@ int main(int argc, char* argv[]) {
   }
   image.send();
   std::cout << "All packets have been sent 1 time" << std::endl;
-  std::cout << "Waiting for response of the receiver..." << std::endl;
+  std::cout << "Waiting for request of the receiver..." << std::endl;
   image.sendMissingPacket();
 
   return EXIT_SUCCESS;

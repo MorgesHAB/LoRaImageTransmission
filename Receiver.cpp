@@ -94,10 +94,10 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
   exit(0);
 }
 
-void askForMissingPacket(std::vector<uint8_t*> &packetCollection, int totalPacket, RH_RF95& rf95) {
+void askForMissingPacket(std::vector<uint8_t*> &packetCollection, RH_RF95& rf95) {
   uint8_t packet[PACKET_INDEX_SIZE];
-  int index(FIRST_DATA_INDEX);
-  for (uint16_t nbr(0); nbr < totalPacket && index < LAST_DATA_INDEX; ++nbr) { // warning indexes
+  uint8_t index(FIRST_DATA_INDEX);
+  for (uint16_t nbr(0); nbr < packetCollection.size() && index < LAST_DATA_INDEX; ++nbr) { // warning indexes
     if (packetCollection[nbr] == nullptr) { // not received
       packet[index] = (nbr+1) >> 8;
       packet[index+1] = nbr+1;
@@ -154,10 +154,9 @@ void TCP(uint8_t* packet, RH_RF95& rf95) {
       do { std::cin >> mode; } while(mode != "1" && mode != "2" && mode != "3");
       std::cout << "ok mode " << mode << " is activated" << std::endl;
       if (mode == "1") buildImage(packetCollection);
-      if (mode == "3") askForMissingPacket(packetCollection, totalPacket, rf95);
+      if (mode == "3") askForMissingPacket(packetCollection, rf95);
     }
   }
-  if (mode == "3") askForMissingPacket(packetCollection, totalPacket, rf95);
 }
 
 
