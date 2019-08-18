@@ -158,6 +158,7 @@ public:
         uint8_t len = PACKET_INDEX_SIZE;
 
         if (rf95.recv(packet, &len)) {
+          std::cout << +packet[NBR_PACKET_TO_SEND_AGAIN] << std::endl;
           if (packet[NBR_PACKET_TO_SEND_AGAIN] == 0) {
             std::cout << "|| All packets have been received, process finished ||" << std::endl;
             exit(0);
