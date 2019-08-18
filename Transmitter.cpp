@@ -128,7 +128,7 @@ public:
       }
   }
 
-  void sendPacketNbr(size_t nbr) {
+  void sendPacketNbr(uint16_t nbr) {
     if (nbr > 0 && nbr <= packetCollection.size()) {
       ++packetCollection[nbr-1]->get()[SENT_NBR];
       rf95.send(packetCollection[nbr-1]->get(), PACKET_INDEX_SIZE);
@@ -163,6 +163,7 @@ public:
           }
           for (int i(FIRST_DATA_INDEX); i < packet[LENGTH]; i+=2) {
             uint16_t nbr(packet[i] << 8 | packet[i+1]);
+            std::cout << "---> " << +nbr << std::endl;
             sendPacketNbr(nbr);
           }
         }
