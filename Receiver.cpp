@@ -94,9 +94,10 @@ void buildImage(std::vector<uint8_t*> &packetCollection) {
   exit(0);
 }
 
-void askForMissingPacket(std::vector<uint8_t*> &packetCollection, int totalPacket) {
+void askForMissingPacket(std::vector<uint8_t*> &packetCollection, int totalPacket, RH_RF95& rf95) {
   uint8_t packet[PACKET_INDEX_SIZE];
-  for (int nbr(0), int index(FIRST_DATA_INDEX); nbr < totalPacket && index < LAST_DATA_INDEX; ++nbr, index+=2) { // warning indexes
+   int index(FIRST_DATA_INDEX);
+  for (int nbr(0); nbr < totalPacket && index < LAST_DATA_INDEX; ++nbr, index+=2) { // warning indexes
     if (packetCollection[nbr] == nullptr) {
       packet[index] = packetCollection[nbr][NUMBER_L];
       packet[index+1] = packetCollection[nbr][NUMBER_R];
@@ -104,9 +105,10 @@ void askForMissingPacket(std::vector<uint8_t*> &packetCollection, int totalPacke
   }
   rf95.send(packet, PACKET_INDEX_SIZE);
   rf95.waitPacketSent();
+  std::cout << "Packet response sent" << std::endl;
 }
 
-void TCP(uint8_t* packet) {
+void TCP(uint8_t* packet, RH_RF95& rf95) {
   uint16_t linesNbr(packet[LINES_NBR_L] << 8 | packet[LINES_NBR_R]);
   uint16_t colNbr(packet[COLUMNS_NBR_L] << 8 | packet[COLUMNS_NBR_R]);
   int bytePerPacket(BYTE_PER_PACKET);
@@ -138,7 +140,7 @@ void TCP(uint8_t* packet) {
       do { std::cin >> mode; } while(mode != "1" && mode != "2" && mode != "3");
       std::cout << "ok mode " << mode << " is activated" << std::endl;
       if (mode == "1") buildImage(packetCollection);
-      if (mode == "3") askForMissingPacket(packetCollection, totalPacket);
+      if (mode == "3") askForMissingPacket(packetCollection, totalPacket, rf95);
     }
   }
 }
@@ -155,7 +157,7 @@ int main() {
 
       if (rf95.recv(packet, &len)) {
         print(packet);
-        TCP(packet);
+        TCP(packet, rf95);
       }
     }
     usleep(RECEPTION_SLEEP_TIME);
