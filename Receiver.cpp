@@ -133,7 +133,7 @@ void TCP(uint8_t* packet, RH_RF95& rf95) {
     ++packetcounter;
   }
 
-  if (packetNbr == totalPacket || packetcounter == totalPacket) {
+  if (packetNbr == totalPacket /*|| packetcounter == totalPacket*/) {
     bool allReceived(true);
     for (int nbr(0); nbr < totalPacket; ++nbr) { // warning indexes
       if (packetCollection[nbr] == nullptr) {
