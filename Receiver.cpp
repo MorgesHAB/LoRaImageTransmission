@@ -108,7 +108,15 @@ void askForMissingPacket(std::vector<uint8_t*> &packetCollection, int totalPacke
   packet[NBR_PACKET_TO_SEND_AGAIN] = (index + 1 - FIRST_DATA_INDEX) / 2;
   rf95.send(packet, PACKET_INDEX_SIZE);
   rf95.waitPacketSent();
-  std::cout << "Missing Packets response sent" << std::endl;
+  std::cout << "Missing Packets request sent" << std::endl;
+}
+
+void sendReceptionConfirmation(RH_RF95& rf95) {
+  uint8_t packet[PACKET_INDEX_SIZE];
+  packet[NBR_PACKET_TO_SEND_AGAIN] = 0;
+  rf95.send(packet, PACKET_INDEX_SIZE);
+  rf95.waitPacketSent();
+  std::cout << "Reception confirmation sent" << std::endl;
 }
 
 void TCP(uint8_t* packet, RH_RF95& rf95) {
@@ -126,7 +134,6 @@ void TCP(uint8_t* packet, RH_RF95& rf95) {
     ++packetcounter;
   }
 
-  if (mode == "3") askForMissingPacket(packetCollection, totalPacket, rf95);
   if (packetNbr == totalPacket || packetcounter == totalPacket) {
     bool allReceived(true);
     for (int nbr(0); nbr < totalPacket; ++nbr) { // warning indexes
@@ -136,7 +143,10 @@ void TCP(uint8_t* packet, RH_RF95& rf95) {
       }
     }
     std::cout << "packet all received : " << ((allReceived)?"YES":"NO") << std::endl;
-    if (allReceived) buildImage(packetCollection);
+    if (allReceived) {
+      sendReceptionConfirmation(rf95);
+      buildImage(packetCollection);
+    }
     else {
       std::cout << "Some packets are missing, would you like to build the " <<
                     "image whatever [1], wait that they come [2] or start the automatic TCP manager [3]" << std::endl
@@ -147,6 +157,7 @@ void TCP(uint8_t* packet, RH_RF95& rf95) {
       if (mode == "3") askForMissingPacket(packetCollection, totalPacket, rf95);
     }
   }
+  if (mode == "3") askForMissingPacket(packetCollection, totalPacket, rf95);
 }
 
 
