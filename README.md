@@ -6,32 +6,6 @@
 
 ### Description : Transmit a ppm image or an image taken with a raspberry Pi Camera
 
-## Building
-```
-sudo apt-get install git
-git clone https://github.com/MorgesHAB/LoRaImageTransmission
-```
-Then if your modem is the transmitter type
-```
-make Transmitter
-```
-Or if it is the receiver modem type
-```
-make receiver
-```
-
-## Use Syntax
-For the transmitter software
-```
-./Transmitter image.ppm
-./Transmitter livePicture
-./Transmitter image.ppm [packet number]
-```
-for the receiver software
-```
-./Receiver
-```
-
 -----------------------------------------------------------------
 ## Installation of image magick
 First you need to update & upgrade your Raspberry Pi
@@ -43,7 +17,32 @@ Then we need to install imagemagick to convert jpg and ppm image
 ```
 sudo apt install imagemagick
 ```
-
+-----------------------------------------------------------------
+## Building
+```
+sudo apt-get install git
+git clone https://github.com/MorgesHAB/LoRaImageTransmission
+```
+Then if your modem is the transmitter, type
+```
+make Transmitter
+```
+Or if it is the receiver modem, type
+```
+make Receiver
+```
+-----------------------------------------------------------------
+## Use Syntax
+For the transmitter software
+```
+./Transmitter image.ppm
+./Transmitter livePicture
+./Transmitter image.ppm [packet number]
+```
+for the receiver software
+```
+./Receiver
+```
 -----------------------------------------------------------------
 ## Installation of a web server to read the image
 ```
@@ -68,3 +67,4 @@ for example :  `192.32.12.45`
 
 
 <img src="/Img/LoRa.png" width=800>
+<p align="center"><b>Illustration of the two LoRa modem, one on a Raspberry Pi zero and one on a RPi 3B</b><br></p>
