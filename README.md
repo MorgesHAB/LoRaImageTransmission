@@ -67,4 +67,4 @@ for example :  `192.32.12.45`
 
 
 <img src="/Img/LoRa.png" width=800>
-<p align="center"><b>Illustration of the two LoRa modem, one on a Raspberry Pi zero and one on a RPi 3B</b><br></p>
+<p align="center"><em>Illustration of the two LoRa modem, one on a Raspberry Pi zero and one on a RPi 3B</em><br></p>
