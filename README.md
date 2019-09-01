@@ -4,7 +4,8 @@
 
 ## Goal : Transmit an image with two LoRa modem
 
-### Description
+## Description
+
 Transmit a ppm image or an image taken with a raspberry Pi Camera with two LoRa modem
 With this communication protocol, you can use a reliable mode. It means that the receiver
 communicate the missing packets to send again while all the packets are not received
@@ -72,5 +73,3 @@ for example :  `192.32.12.45`
 
 <img src="/Img/LoRa.png" width=800>
 <p align="center"><em>Illustration of the two LoRa modem, one on a Raspberry Pi zero and one on a RPi 3B</em><br></p>
-
-# SALUT GABY !!!!!!
