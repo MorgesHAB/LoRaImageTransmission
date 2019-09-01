@@ -6,11 +6,30 @@
 
 ### Description : Transmit a ppm image or an image taken with a raspberry Pi Camera
 
+## Building
+```
+sudo apt-get install git
+git clone https://github.com/MorgesHAB/LoRaImageTransmission
+```
+Then if your modem is the transmitter type
+```
+make Transmitter
+```
+Or if it is the receiver modem type
+```
+make receiver
+```
+
 ## Use Syntax
+For the transmitter software
 ```
 ./Transmitter image.ppm
 ./Transmitter livePicture
 ./Transmitter image.ppm [packet number]
+```
+for the receiver software
+```
+./Receiver
 ```
 
 -----------------------------------------------------------------
