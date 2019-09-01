@@ -6,11 +6,12 @@
 
 ## Description
 
-Transmit a ppm image or an image taken with a raspberry Pi Camera with two LoRa modem
+Transmit a ppm image or an image taken with a raspberry Pi Camera with two LoRa modem.
 With this communication protocol, you can use a reliable mode. It means that the receiver
 communicate the missing packets to send again while all the packets are not received
 If some packets can't be send received, you can build the image whatever and the
 missing pixels will be fills with black color.
+
 -----------------------------------------------------------------
 ## Installation of image magick
 First you need to update & upgrade your Raspberry Pi
